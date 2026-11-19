@@ -35,13 +35,13 @@ Please include tests and docs with every pull request!
 
 ## Repository Setup
 
-The slate-yjs repository is a monorepo that is managed with [yarn workspaces](https://yarnpkg.com/features/workspaces). Unlike more traditional repositories, this means that the repository must be built in order for common development activities to function as expected.
+The slate-yjs repository is a monorepo that is managed with [pnpm workspaces](https://pnpm.io/workspaces). Unlike more traditional repositories, this means that the repository must be built in order for common development activities to function as expected.
 
-To run the build, you need to have the slate-yjs repository cloned to your computer. After that, you need to `cd` into the directory where you cloned it, and install the dependencies with `yarn` and build the monorepo:
+To run the build, you need to have the slate-yjs repository cloned to your computer. After that, you need to `cd` into the directory where you cloned it, and install the dependencies with `pnpm` and build the monorepo:
 
 ```text
-yarn install
-yarn build
+pnpm install
+pnpm build
 ```
 
 ## Running Examples
@@ -51,7 +51,7 @@ To run the examples, start by building the monorepo as described in the [Reposit
 Then you can start the examples server with:
 
 ```text
-yarn dev
+pnpm dev
 ```
 
 ## Running Tests
@@ -61,7 +61,7 @@ To run the tests, start by building the monorepo as described in the [Repository
 Then you can rerun the tests with:
 
 ```text
-yarn test
+pnpm test
 ```
 
 For instructions on how to debug something, head over to the [vitest docs](https://vitest.dev/guide/debugging.html).
@@ -69,7 +69,7 @@ For instructions on how to debug something, head over to the [vitest docs](https
 In addition to tests you should also run the linter:
 
 ```text
-yarn lint
+pnpm lint
 ```
 
 This will catch TypeScript, Prettier, and Eslint errors.

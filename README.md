@@ -106,7 +106,7 @@ https://docs.slate-yjs.dev
 
 ## Packages
 
-Slate-yjs's codebase is monorepo managed with [yarn workspaces](https://yarnpkg.com/features/workspaces). It consists of a handful of packages—although you won't always use all of them:
+Slate-yjs's codebase is monorepo managed with [pnpm workspaces](https://pnpm.io/workspaces). It consists of a handful of packages—although you won't always use all of them:
 
 | **Package**                            |                                                                                                          **Version** |                                                                                                                                                       **Size** | **Description**                                | **Changelog**                                                                                |
 | :------------------------------------- | -------------------------------------------------------------------------------------------------------------------: | -------------------------------------------------------------------------------------------------------------------------------------------------------------: | :--------------------------------------------- | -------------------------------------------------------------------------------------------- |

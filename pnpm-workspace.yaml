@@ -1,0 +1,20 @@
+packages:
+  - 'packages/*'
+  - 'examples/*'
+
+# Refuse to resolve a version until it has been on npm for 3 days.
+minimumReleaseAge: 4320
+
+# Install scripts run only for packages set to true here. pnpm fails the
+# install when a dependency with a build script is missing from this list.
+allowBuilds:
+  esbuild: true
+  # Funding banners only.
+  '@fortawesome/fontawesome-common-types': false
+  '@fortawesome/fontawesome-svg-core': false
+  '@fortawesome/free-regular-svg-icons': false
+  '@fortawesome/free-solid-svg-icons': false
+  core-js-pure: false
+  # Native build for the example backend's SQLite store. Set to true locally
+  # to run examples/backend.
+  sqlite3: false
