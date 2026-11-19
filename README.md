@@ -30,7 +30,7 @@ Slate-yjs aims to be the goto collaboration solution for slate. Get started in s
 <br/>
 
 <p align="center">
-<a href="https://github.com/BitPhinix/slate-yjs/graphs/commit-activity" alt="Maintenance">
+<a href="https://github.com/slate-yjs/slate-yjs/graphs/commit-activity" alt="Maintenance">
         <img src="https://img.shields.io/badge/Maintained%3F-yes-brightgreen.svg" /></a>
 <a href="http://commitizen.github.io/cz-cli/" alt="Commitizen friendly">
         <img src="https://img.shields.io/badge/commitizen-friendly-brightgreen.svg" /></a>
@@ -38,9 +38,9 @@ Slate-yjs aims to be the goto collaboration solution for slate. Get started in s
         <img src="https://img.shields.io/npm/dt/slate-yjs.svg" /></a>
 <a href="https://www.npmjs.com/package/slate-yjs" alt="NPM">
         <img src="https://img.shields.io/npm/v/slate-yjs" /></a>
-<a href="https://github.com/BitPhinix/slate-yjs/actions" alt="Tests">
-        <img src="https://img.shields.io/github/workflow/status/bitphinix/slate-yjs/test" /></a>
-<a href="https://github.com/BitPhinix/slate-yjs/actions?query=workflow%3Arelease" alt="Semantic Release">
+<a href="https://github.com/slate-yjs/slate-yjs/actions" alt="Tests">
+        <img src="https://img.shields.io/github/workflow/status/slate-yjs/slate-yjs/test" /></a>
+<a href="https://github.com/slate-yjs/slate-yjs/actions?query=workflow%3Arelease" alt="Semantic Release">
         <img src="https://img.shields.io/badge/%20%20%F0%9F%93%A6%F0%9F%9A%80-semantic--release-e10079.svg" /></a>
 
 <br/>
@@ -110,8 +110,8 @@ Slate-yjs's codebase is monorepo managed with [pnpm workspaces](https://pnpm.io/
 
 | **Package**                            |                                                                                                          **Version** |                                                                                                                                                       **Size** | **Description**                                | **Changelog**                                                                                |
 | :------------------------------------- | -------------------------------------------------------------------------------------------------------------------: | -------------------------------------------------------------------------------------------------------------------------------------------------------------: | :--------------------------------------------- | -------------------------------------------------------------------------------------------- |
-| [`@slate-yjs/core`](./packages/core)   |   [![](https://img.shields.io/npm/v/@slate-yjs/core?maxAge=3600&label=&colorB=007ec6)](./packages/core/package.json) |   [![](http://img.badgesize.io/https://unpkg.com/@slate-yjs/core/dist/index.cjs?compression=gzip&label=%20)](https://unpkg.com/@slate-yjs/core/dist/index.cjs) | Core slate-yjs binding.                        | [CHANGELOG.md](https://github.com/BitPhinix/slate-yjs/blob/main/packages/core/CHANGELOG.md)  |
-| [`@slate-yjs/react`](./packages/react) | [![](https://img.shields.io/npm/v/@slate-yjs/react?maxAge=3600&label=&colorB=007ec6)](./packages/react/package.json) | [![](http://img.badgesize.io/https://unpkg.com/@slate-yjs/react/dist/index.cjs?compression=gzip&label=%20)](https://unpkg.com/@slate-yjs/react/dist/index.cjs) | React specific components/utils for slate-yjs. | [CHANGELOG.md](https://github.com/BitPhinix/slate-yjs/blob/main/packages/react/CHANGELOG.md) |
+| [`@slate-yjs/core`](./packages/core)   |   [![](https://img.shields.io/npm/v/@slate-yjs/core?maxAge=3600&label=&colorB=007ec6)](./packages/core/package.json) |   [![](http://img.badgesize.io/https://unpkg.com/@slate-yjs/core/dist/index.cjs?compression=gzip&label=%20)](https://unpkg.com/@slate-yjs/core/dist/index.cjs) | Core slate-yjs binding.                        | [CHANGELOG.md](https://github.com/slate-yjs/slate-yjs/blob/main/packages/core/CHANGELOG.md)  |
+| [`@slate-yjs/react`](./packages/react) | [![](https://img.shields.io/npm/v/@slate-yjs/react?maxAge=3600&label=&colorB=007ec6)](./packages/react/package.json) | [![](http://img.badgesize.io/https://unpkg.com/@slate-yjs/react/dist/index.cjs?compression=gzip&label=%20)](https://unpkg.com/@slate-yjs/react/dist/index.cjs) | React specific components/utils for slate-yjs. | [CHANGELOG.md](https://github.com/slate-yjs/slate-yjs/blob/main/packages/react/CHANGELOG.md) |
 
 <br/>
 <br/>
@@ -133,7 +133,7 @@ These products use slate-yjs, and can give you an idea of what's possible:
 
 For questions around yjs, head over to the [Yjs Community](https://discuss.yjs.dev/). Trying to build a backend with [hocuspocus](https://www.hocuspocus.dev/) and have questions? Take a look at the #hocuspocus channel in the [TipTap Discord](https://discord.com/invite/WtJ49jGshW). Having issues with slate? There's a there's a [Slack](https://slate-slack.herokuapp.com/) for that as well.
 
-Any questions about slate-yjs? Thead over to the #slate-yjs channel inside the [Slate Slack](https://slate-slack.herokuapp.com/) or post something in the [Discussions](https://github.com/BitPhinix/slate-yjs/discussions)
+Any questions about slate-yjs? Thead over to the #slate-yjs channel inside the [Slate Slack](https://slate-slack.herokuapp.com/) or post something in the [Discussions](https://github.com/slate-yjs/slate-yjs/discussions)
 
 <br/>
 <br/>
@@ -142,4 +142,4 @@ Any questions about slate-yjs? Thead over to the #slate-yjs channel inside the [
 
 All contributions are super welcome! Check out the [contributing instructions](https://docs.slate-yjs.dev/contributing/contributing) for more info!
 
-Slate-yjs is [MIT-licensed](https://github.com/Bitphinix/slate-yjs/blob/main/LICENSE.md).
+Slate-yjs is [MIT-licensed](https://github.com/slate-yjs/slate-yjs/blob/main/LICENSE.md).

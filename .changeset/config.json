@@ -2,7 +2,7 @@
   "$schema": "https://unpkg.com/@changesets/config@2.1.1/schema.json",
   "changelog": [
     "@changesets/changelog-github",
-    { "repo": "BitPhinix/slate-yjs" }
+    { "repo": "slate-yjs/slate-yjs" }
   ],
   "commit": false,
   "linked": [["@slate-yjs/core", "@slate-yjs/react"]],

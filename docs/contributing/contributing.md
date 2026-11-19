@@ -23,13 +23,13 @@ Any issue you open must include:
 
 For questions around yjs, head over to the [Yjs Community](https://discuss.yjs.dev/). Trying to build a backend with [hocuspocus](https://www.hocuspocus.dev/) and have questions? Take a look at the #hocuspocus channel in the [TipTap Discord](https://discord.com/invite/WtJ49jGshW). Having issues with slate? There's a there's a [Slack](https://slate-slack.herokuapp.com/) for that as well.
 
-Any questions about slate-yjs itself? Thead over to the #slate-yjs channel inside the [Slate Slack](https://slate-slack.herokuapp.com/) or post something in the [Discussions](https://github.com/BitPhinix/slate-yjs/discussions)
+Any questions about slate-yjs itself? Thead over to the #slate-yjs channel inside the [Slate Slack](https://slate-slack.herokuapp.com/) or post something in the [Discussions](https://github.com/slate-yjs/slate-yjs/discussions)
 
 Please use the Slack instead of asking questions in issues, since we want to reserve issues for keeping track of bugs and features. We close questions in issues so that maintaining the project isn't overwhelming.
 
 ## Submitting Pull Requests
 
-All pull requests are super welcomed and greatly appreciated! Issues in need of a solution are marked with a [`help wanted`](https://github.com/BitPhinix/slate-yjs/labels/help%20wanted) label if you're looking for somewhere to start.
+All pull requests are super welcomed and greatly appreciated! Issues in need of a solution are marked with a [`help wanted`](https://github.com/slate-yjs/slate-yjs/labels/help%20wanted) label if you're looking for somewhere to start.
 
 Please include tests and docs with every pull request!
 
