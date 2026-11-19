@@ -18,12 +18,12 @@
   "unpkg": "dist/index.global.js",
   "types": "dist/index.d.ts",
   "scripts": {
-    "build": "yarn run tsup && tsc --emitDeclarationOnly",
-    "dev": "yarn run tsup --watch"
+    "build": "tsup && tsc --emitDeclarationOnly",
+    "dev": "tsup --watch"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/BitPhinix/slate-yjs.git"
+    "url": "https://github.com/slate-yjs/slate-yjs.git"
   },
   "license": "MIT",
   "devDependencies": {
@@ -38,9 +38,9 @@
     "yjs": "^13.5.29"
   },
   "bugs": {
-    "url": "https://github.com/BitPhinix/slate-yjs/issues"
+    "url": "https://github.com/slate-yjs/slate-yjs/issues"
   },
-  "homepage": "https://github.com/BitPhinix/slate-yjs#readme",
+  "homepage": "https://github.com/slate-yjs/slate-yjs#readme",
   "dependencies": {
     "y-protocols": "^1.0.5"
   }

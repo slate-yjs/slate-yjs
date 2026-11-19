@@ -1,0 +1,32 @@
+name: supply-chain
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+permissions:
+  contents: read
+
+jobs:
+  lockfile:
+    name: Lockfile
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Audit lockfile sources
+        run: ./scripts/audit-lockfile-sources.sh
+
+      - name: Validate package release age
+        if: github.event_name == 'pull_request'
+        run: ./scripts/validate-package-release-age.sh
+        env:
+          BASE_REF: origin/${{ github.base_ref }}

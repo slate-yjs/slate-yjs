@@ -27,7 +27,7 @@ You can read more about this [here](https://josephg.com/blog/crdts-are-the-futur
 
 ### Packages
 
-Slate-yjs's codebase is monorepo managed with [yarn workspaces](https://yarnpkg.com/features/workspaces). It consists of a handful of packages—although you won't always use all of them:
+Slate-yjs's codebase is monorepo managed with [pnpm workspaces](https://pnpm.io/workspaces). It consists of a handful of packages—although you won't always use all of them:
 
 | **Package**                          |                                                                                                                                                                                                                                                                                          **Version** |                                                                                                                                                                                                                                                                                                                                                               **Size** | **Description**                                |
 | ------------------------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------: | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------: | ---------------------------------------------- |
@@ -38,10 +38,10 @@ Slate-yjs's codebase is monorepo managed with [yarn workspaces](https://yarnpkg.
 
 For questions around yjs, head over to the [Yjs Community](https://discuss.yjs.dev). Trying to build a backend with [hocuspocus](https://www.hocuspocus.dev) and have questions? Take a look at the #hocuspocus channel in the [TipTap Discord](https://discord.com/invite/WtJ49jGshW). Have issues with slate? There's a [Slack](https://slate-slack.herokuapp.com) for that as well.
 
-Any questions about slate-yjs? Thread over to the #slate-yjs channel inside the [Slate Slack](https://slate-slack.herokuapp.com) or post something in the [Discussions](https://github.com/BitPhinix/slate-yjs/discussions)
+Any questions about slate-yjs? Thread over to the #slate-yjs channel inside the [Slate Slack](https://slate-slack.herokuapp.com) or post something in the [Discussions](https://github.com/slate-yjs/slate-yjs/discussions)
 
 ### Contributing!
 
 All contributions are super welcome! Check out the Contributing instructions for more info!
 
-Slate-yjs is [MIT-licensed](https://github.com/Bitphinix/slate-yjs/blob/main/LICENSE.md).
+Slate-yjs is [MIT-licensed](https://github.com/slate-yjs/slate-yjs/blob/main/LICENSE.md).
