@@ -38,7 +38,7 @@ Slate-yjs's codebase is monorepo managed with [pnpm workspaces](https://pnpm.io/
 
 For questions around yjs, head over to the [Yjs Community](https://discuss.yjs.dev). Trying to build a backend with [hocuspocus](https://www.hocuspocus.dev) and have questions? Take a look at the #hocuspocus channel in the [TipTap Discord](https://discord.com/invite/WtJ49jGshW). Have issues with slate? There's a [Slack](https://slate-slack.herokuapp.com) for that as well.
 
-Any questions about slate-yjs? Thread over to the #slate-yjs channel inside the [Slate Slack](https://slate-slack.herokuapp.com) or post something in the [Discussions](https://github.com/slate-yjs/slate-yjs/discussions)
+Any questions about slate-yjs? Post them in the [Discussions](https://github.com/slate-yjs/slate-yjs/discussions).
 
 ### Contributing!
 
