@@ -5,8 +5,8 @@
   "type": "module",
   "scripts": {
     "start": "node dist/index.js",
-    "build": "yarn run tsup",
-    "dev": "yarn build --watch --onSuccess \"yarn run start\""
+    "build": "tsup",
+    "dev": "tsup --watch --onSuccess \"pnpm run start\""
   },
   "devDependencies": {
     "tsup": "^5.12.1"

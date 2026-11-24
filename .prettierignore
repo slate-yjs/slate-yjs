@@ -4,5 +4,5 @@ dist/
 lib/
 node_modules/
 tmp/
-.yarn/
+pnpm-lock.yaml
 coverage/
