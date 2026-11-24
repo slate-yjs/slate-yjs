@@ -1,5 +1,11 @@
 # @slate-yjs/react
 
+## 1.1.1
+
+### Patch Changes
+
+- [#437](https://github.com/slate-yjs/slate-yjs/pull/437) [`3765822`](https://github.com/slate-yjs/slate-yjs/commit/3765822645b877564d6fcd1c2075bdf4a1828a15) Thanks [@juliankrispel](https://github.com/juliankrispel)! - Point package links at slate-yjs/slate-yjs.
+
 ## 1.1.0
 
 ### Minor Changes
