@@ -48,12 +48,18 @@ import * as Y from 'yjs';
 
 export function Editor() {
   const [value, setValue] = useState([]);
+  const [synced, setSynced] = useState(false);
 
   const provider = useMemo(
     () =>
       new HocuspocusProvider({
         url: 'ws://127.0.0.1:1234',
         name: 'slate-yjs-demo',
+        onSynced: ({ state }) => {
+          if (state) {
+            setSynced(true);
+          }
+        },
         connect: false,
       }),
     []
@@ -72,7 +78,7 @@ export function Editor() {
       }
 
       Transforms.insertNodes(
-        editor,
+        e,
         {
           type: 'paragraph',
           children: [{ text: '' }],
@@ -90,10 +96,17 @@ export function Editor() {
     provider.connect();
     return () => provider.disconnect();
   }, [provider]);
+  // Connect the editor only after the first sync. Before that the document
+  // is empty, so the normalizer above would insert a paragraph, and every
+  // client that loads would add one more to the shared document.
   useEffect(() => {
+    if (!synced) {
+      return undefined;
+    }
+
     YjsEditor.connect(editor);
     return () => YjsEditor.disconnect(editor);
-  }, [editor]);
+  }, [editor, synced]);
 
   return (
     <Slate value={value} onChange={setValue} editor={editor}>
@@ -105,3 +118,5 @@ export function Editor() {
 }
 
 ```
+
+Create the initial content once, on the server in `onLoadDocument` as above. Don't load an initial value on each client: every copy inserted by a different client is kept when the documents merge, so the content shows up several times.

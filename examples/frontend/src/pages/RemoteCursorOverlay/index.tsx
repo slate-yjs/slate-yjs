@@ -17,6 +17,7 @@ import { RemoteCursorOverlay } from './Overlay';
 export function RemoteCursorsOverlayPage() {
   const [value, setValue] = useState<Descendant[]>([]);
   const [connected, setConnected] = useState(false);
+  const [synced, setSynced] = useState(false);
 
   const provider = useMemo(
     () =>
@@ -25,6 +26,11 @@ export function RemoteCursorsOverlayPage() {
         name: 'slate-yjs-demo',
         onConnect: () => setConnected(true),
         onDisconnect: () => setConnected(false),
+        onSynced: ({ state }) => {
+          if (state) {
+            setSynced(true);
+          }
+        },
         connect: false,
       }),
     []
@@ -64,10 +70,17 @@ export function RemoteCursorsOverlayPage() {
     provider.connect();
     return () => provider.disconnect();
   }, [provider]);
+  // Connect the editor only after the first sync. Before that the shared
+  // type is empty, and normalizing an empty editor would insert a paragraph
+  // that every client then syncs to the document.
   useEffect(() => {
+    if (!synced) {
+      return undefined;
+    }
+
     YjsEditor.connect(editor);
     return () => YjsEditor.disconnect(editor);
-  }, [editor]);
+  }, [editor, synced]);
 
   return (
     <React.Fragment>

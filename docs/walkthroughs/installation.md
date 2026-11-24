@@ -182,7 +182,6 @@ const Editor = () => {
 
   // Setup the binding
   const editor = useMemo(() => {
-    const sharedType = provider.document.get('content', Y.XmlText);
     const e = withReact(withYjs(createEditor(), sharedType));
 
     // Ensure editor always has at least 1 valid child
@@ -194,7 +193,7 @@ const Editor = () => {
       }
 
       Transforms.insertNodes(
-        editor,
+        e,
         {
           type: 'paragraph',
           children: [{ text: '' }],
@@ -202,7 +201,9 @@ const Editor = () => {
         { at: [0] }
       );
     };
-  }, []);
+
+    return e;
+  }, [sharedType]);
 
   const [value, setValue] = useState([])
 
@@ -224,3 +225,5 @@ const Editor = () => {
 ```
 
 That's it. The binding should now be set up and keep slate and the yjs document in sync.
+
+When the document comes from a connection provider, connect the editor only after the provider's first sync, so the normalizer doesn't add a paragraph to the still empty document. [Collaboration (Hocuspocus)](./collaboration-hocuspocus.md) shows how.

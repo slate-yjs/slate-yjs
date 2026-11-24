@@ -14,6 +14,7 @@ import { withNormalize } from '../plugins/withNormalize';
 export function SimplePage() {
   const [value, setValue] = useState<Descendant[]>([]);
   const [connected, setConnected] = useState(false);
+  const [synced, setSynced] = useState(false);
 
   const provider = useMemo(
     () =>
@@ -22,6 +23,11 @@ export function SimplePage() {
         name: 'slate-yjs-demo',
         onConnect: () => setConnected(true),
         onDisconnect: () => setConnected(false),
+        onSynced: ({ state }) => {
+          if (state) {
+            setSynced(true);
+          }
+        },
         connect: false,
       }),
     []
@@ -55,10 +61,17 @@ export function SimplePage() {
     provider.connect();
     return () => provider.disconnect();
   }, [provider]);
+  // Connect the editor only after the first sync. Before that the shared
+  // type is empty, and normalizing an empty editor would insert a paragraph
+  // that every client then syncs to the document.
   useEffect(() => {
+    if (!synced) {
+      return undefined;
+    }
+
     YjsEditor.connect(editor);
     return () => YjsEditor.disconnect(editor);
-  }, [editor]);
+  }, [editor, synced]);
 
   return (
     <div className="flex justify-center my-32 mx-10">
