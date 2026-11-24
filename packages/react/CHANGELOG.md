@@ -1,5 +1,15 @@
 # @slate-yjs/react
 
+## 1.1.2
+
+### Patch Changes
+
+- [#438](https://github.com/slate-yjs/slate-yjs/pull/438) [`61692ca`](https://github.com/slate-yjs/slate-yjs/commit/61692cac38ddd9064b93dce291658c5d76873ae5) Thanks [@juliankrispel](https://github.com/juliankrispel)! - Accept `RefObject<T | null>` for `containerRef` in `useRemoteCursorOverlayPositions`, which is what `useRef(null)` returns under React 19 types.
+
+- [#442](https://github.com/slate-yjs/slate-yjs/pull/442) [`a8ff798`](https://github.com/slate-yjs/slate-yjs/commit/a8ff798c80abec0620fe8d396e6725612dcfbd16) Thanks [@juliankrispel](https://github.com/juliankrispel)! - Remove the unused `y-protocols` dependency.
+
+- [#443](https://github.com/slate-yjs/slate-yjs/pull/443) [`82077b5`](https://github.com/slate-yjs/slate-yjs/commit/82077b592708c38277b1a7a1f3781e3f4fa83be6) Thanks [@juliankrispel](https://github.com/juliankrispel)! - Publish only `dist`, `src`, the changelog and the license, leaving tests and build config out of the package.
+
 ## 1.1.1
 
 ### Patch Changes
