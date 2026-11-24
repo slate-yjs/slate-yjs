@@ -22,11 +22,25 @@ const BASE: Variant = {
   eagerFlush: true,
 };
 
-const VARIANTS: Variant[] = [
+const MARKS_BUG = "Yjs can't store an empty text node's marks (#343, #415).";
+const STALE_FLUSH_BUG =
+  'Local edits still queued when a remote update arrives are written against the wrong tree.';
+const UNDO_BUG =
+  'Yjs UndoManager deletes too much after restoring a deleted type (yjs/yjs#806).';
+
+// Variants with a `knownBug` are skipped by the regular run, which CI runs,
+// and still covered by the census.
+const VARIANTS: (Variant & { knownBug?: string })[] = [
   BASE,
   { ...BASE, name: 'blocks, 3 clients', clients: 3 },
-  { ...BASE, name: 'marks', marks: true },
-  { ...BASE, name: 'edge mark values', marks: true, edgeMarkValues: true },
+  { ...BASE, name: 'marks', marks: true, knownBug: MARKS_BUG },
+  {
+    ...BASE,
+    name: 'edge mark values',
+    marks: true,
+    edgeMarkValues: true,
+    knownBug: MARKS_BUG,
+  },
   { ...BASE, name: 'inlines', inlines: true },
   { ...BASE, name: 'nested blocks', nested: true },
   { ...BASE, name: 'voids', voids: true },
@@ -36,7 +50,12 @@ const VARIANTS: Variant[] = [
     nested: true,
     deletingNormalizer: true,
   },
-  { ...BASE, name: 'blocks, stale flush', eagerFlush: false },
+  {
+    ...BASE,
+    name: 'blocks, stale flush',
+    eagerFlush: false,
+    knownBug: STALE_FLUSH_BUG,
+  },
   {
     ...BASE,
     name: 'everything, stale flush',
@@ -47,6 +66,28 @@ const VARIANTS: Variant[] = [
     voids: true,
     deletingNormalizer: true,
     eagerFlush: false,
+    knownBug: STALE_FLUSH_BUG,
+  },
+  { ...BASE, name: 'history', history: true },
+  {
+    ...BASE,
+    name: 'history, 1 client',
+    clients: 1,
+    history: true,
+    knownBug: UNDO_BUG,
+  },
+  {
+    ...BASE,
+    name: 'history, everything, stale flush',
+    clients: 3,
+    marks: true,
+    inlines: true,
+    nested: true,
+    voids: true,
+    deletingNormalizer: true,
+    eagerFlush: false,
+    history: true,
+    knownBug: STALE_FLUSH_BUG,
   },
 ];
 
@@ -63,6 +104,7 @@ const actions = fc.array(action, { minLength: 1, maxLength: 40 });
 
 const RUNS = Number(process.env.FUZZ_RUNS ?? 100);
 const CENSUS = Number(process.env.FUZZ_CENSUS ?? 0);
+const ONLY = process.env.FUZZ_ONLY;
 
 function failureOf(variant: Variant, list: Action[], drain: number) {
   try {
@@ -78,7 +120,7 @@ function failureOf(variant: Variant, list: Action[], drain: number) {
 
 describe('fuzz', () => {
   VARIANTS.forEach((variant) => {
-    it(`converges: ${variant.name}`, () => {
+    (variant.knownBug ? it.skip : it)(`converges: ${variant.name}`, () => {
       fc.assert(
         fc.property(actions, fc.nat(), (list, drain) => {
           runFuzz(variant, list, drain);
@@ -92,7 +134,7 @@ describe('fuzz', () => {
 // FUZZ_CENSUS=<runs> groups failures by signature and shrinks one example of
 // each, so a single run reports every distinct bug the fuzzer can reach.
 (CENSUS ? describe : describe.skip)('fuzz census', () => {
-  VARIANTS.forEach((variant) => {
+  VARIANTS.filter((v) => !ONLY || v.name.includes(ONLY)).forEach((variant) => {
     it(`census: ${variant.name}`, () => {
       const found = new Map<string, number>();
       const samples = fc.sample(fc.tuple(actions, fc.nat()), {

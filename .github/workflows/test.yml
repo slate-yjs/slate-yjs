@@ -36,3 +36,9 @@ jobs:
 
       - name: Test
         run: pnpm test
+
+      # Variants with known bugs are skipped; see packages/core/test/fuzz.
+      - name: Fuzz
+        run: pnpm test:fuzz
+        env:
+          FUZZ_RUNS: '1000'

@@ -14,7 +14,9 @@ import {
 import * as Y from 'yjs';
 import {
   slateNodesToInsertDelta,
+  withYHistory,
   withYjs,
+  YHistoryEditor,
   YjsEditor,
   yTextToSlateElement,
 } from '../../src';
@@ -47,6 +49,9 @@ export type Variant = {
   // as in a browser where onChange runs before the next network message. When
   // false, some flushes are skipped so remote updates land in the flush window.
   eagerFlush: boolean;
+  // Adds withYHistory, undo and redo actions, and a final check that undoing
+  // every client's changes restores the initial document.
+  history?: boolean;
 };
 
 export type FuzzFailure = {
@@ -56,7 +61,9 @@ export type FuzzFailure = {
     | 'flush-throw'
     | 'remote-throw'
     | 'diverged-from-yjs'
-    | 'clients-diverged';
+    | 'clients-diverged'
+    | 'undo-throw'
+    | 'undo-incomplete';
   client: number;
   step: number;
   message: string;
@@ -88,7 +95,7 @@ export function failureSignature(failure: FuzzFailure) {
 type Client = {
   id: number;
   doc: Y.Doc;
-  editor: Editor & YjsEditor;
+  editor: Editor & YjsEditor & Partial<YHistoryEditor>;
   inbox: Uint8Array[];
 };
 
@@ -445,7 +452,11 @@ export function runFuzz(
     const doc = new Y.Doc();
     Y.applyUpdate(doc, seedState, REMOTE);
     const sharedRoot = doc.get('content', Y.XmlText) as Y.XmlText;
-    const editor = withYjs(applySchema(createEditor(), variant), sharedRoot);
+    const bound = withYjs(applySchema(createEditor(), variant), sharedRoot);
+    // captureTimeout 0 makes every flush its own undo step.
+    const editor = variant.history
+      ? withYHistory(bound, { captureTimeout: 0 })
+      : bound;
     const client: Client = { id, doc, editor, inbox: [] };
 
     doc.on('update', (update: Uint8Array, origin: unknown) => {
@@ -543,6 +554,28 @@ export function runFuzz(
       return;
     }
 
+    // With history, one in ten actions undoes or redoes instead of editing.
+    if (variant.history && Math.abs(action.kind) % 10 === 7) {
+      const redo = Math.abs(action.b) % 3 === 0;
+      try {
+        if (redo) {
+          editor.redo?.();
+        } else {
+          editor.undo?.();
+        }
+        trace?.(
+          `  ${redo ? 'redo' : 'undo'} -> ${JSON.stringify(editor.children)}`
+        );
+      } catch (error) {
+        fail('undo-throw', client, message(error));
+      }
+      if (variant.eagerFlush || Math.abs(action.c) % 4 !== 0) {
+        flush(client);
+        checkAgainstYjs(client);
+      }
+      return;
+    }
+
     // Plain Slate is the reference. If it rejects the edit, skip it.
     const reference = plainEditor(variant, editor.children);
     try {
@@ -601,32 +634,77 @@ export function runFuzz(
     });
     return true;
   };
-  for (let round = 0; round < 20 && drainRound(); round += 1) {
-    // drainRound does the work
+  const drain = () => {
+    for (let round = 0; round < 20 && drainRound(); round += 1) {
+      // drainRound does the work
+    }
+    clients.forEach(checkAgainstYjs);
+  };
+  drain();
+
+  const checkConverged = () => {
+    const [first, ...rest] = clients;
+    const firstState = yTextToSlateElement(first.editor.sharedRoot).children;
+    rest.forEach((client) => {
+      const state = yTextToSlateElement(client.editor.sharedRoot).children;
+      if (!sameJson(state, firstState)) {
+        fail(
+          'clients-diverged',
+          client,
+          `client ${client.id} ${JSON.stringify(
+            state
+          )}\nclient 0 ${JSON.stringify(firstState)}`
+        );
+      }
+      if (!sameJson(client.editor.children, first.editor.children)) {
+        fail(
+          'clients-diverged',
+          client,
+          `editor ${client.id} ${JSON.stringify(
+            client.editor.children
+          )}\neditor 0 ${JSON.stringify(first.editor.children)}`
+        );
+      }
+    });
+  };
+  checkConverged();
+
+  if (!variant.history) {
+    return;
   }
 
-  clients.forEach(checkAgainstYjs);
-
-  const [first, ...rest] = clients;
-  const firstState = yTextToSlateElement(first.editor.sharedRoot).children;
-  rest.forEach((client) => {
-    const state = yTextToSlateElement(client.editor.sharedRoot).children;
-    if (!sameJson(state, firstState)) {
-      fail(
-        'clients-diverged',
-        client,
-        `client ${client.id} ${JSON.stringify(
-          state
-        )}\nclient 0 ${JSON.stringify(firstState)}`
-      );
+  // Every client undoes all of its changes. Clients must converge. With one
+  // client the document must also return to the initial value. With several,
+  // undoing one client's change can remove content another client added
+  // inside it, so the result isn't necessarily the initial value.
+  step = actions.length + 1;
+  clients.forEach((client) => {
+    try {
+      flush(client);
+      let guard = 0;
+      while (client.editor.undoManager?.canUndo() && guard < 1000) {
+        client.editor.undo?.();
+        flush(client);
+        guard += 1;
+      }
+    } catch (error) {
+      fail('undo-throw', client, `undo all: ${message(error)}`);
     }
-    if (!sameJson(client.editor.children, first.editor.children)) {
+  });
+  drain();
+  checkConverged();
+  if (clients.length > 1) {
+    return;
+  }
+  const expected = normalized(variant, initialValue(variant));
+  clients.forEach((client) => {
+    if (!sameJson(client.editor.children, expected)) {
       fail(
-        'clients-diverged',
+        'undo-incomplete',
         client,
-        `editor ${client.id} ${JSON.stringify(
+        `editor   ${JSON.stringify(
           client.editor.children
-        )}\neditor 0 ${JSON.stringify(first.editor.children)}`
+        )}\ninitial  ${JSON.stringify(expected)}`
       );
     }
   });
