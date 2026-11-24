@@ -1,5 +1,13 @@
 # @slate-yjs/example
 
+## 0.0.15
+
+### Patch Changes
+
+- Updated dependencies [[`8e65a09`](https://github.com/slate-yjs/slate-yjs/commit/8e65a0939c62f4c1fb5c866b0b7dc6ab7aeb4134), [`58a9c0f`](https://github.com/slate-yjs/slate-yjs/commit/58a9c0f6912e2d825c058aad47e4b23fe478e14a)]:
+  - @slate-yjs/core@1.0.5
+  - @slate-yjs/react@1.1.2
+
 ## 0.0.14
 
 ### Patch Changes

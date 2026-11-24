@@ -1,5 +1,13 @@
 # @slate-yjs/core
 
+## 1.0.5
+
+### Patch Changes
+
+- [#455](https://github.com/slate-yjs/slate-yjs/pull/455) [`8e65a09`](https://github.com/slate-yjs/slate-yjs/commit/8e65a0939c62f4c1fb5c866b0b7dc6ab7aeb4134) Thanks [@juliankrispel](https://github.com/juliankrispel)! - With `autoSend`, a cursor hidden with `CursorEditor.sendCursorPosition(editor, null)` (as `useUnsetCursorPositionOnBlur` does) now stays hidden until the local selection moves. It was sent again on the next change, including changes from other users. An unchanged selection is also no longer re-sent on every change.
+
+- [#454](https://github.com/slate-yjs/slate-yjs/pull/454) [`58a9c0f`](https://github.com/slate-yjs/slate-yjs/commit/58a9c0f6912e2d825c058aad47e4b23fe478e14a) Thanks [@juliankrispel](https://github.com/juliankrispel)! - Fix moving a node forward within its parent. The target position in Yjs was computed before the node was removed, so text and inline nodes landed at the wrong offset, for example inside the next text node, and other clients saw a different document.
+
 ## 1.0.4
 
 ### Patch Changes
