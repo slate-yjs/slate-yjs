@@ -1,5 +1,11 @@
 # @slate-yjs/core
 
+## 1.0.3
+
+### Patch Changes
+
+- [#421](https://github.com/slate-yjs/slate-yjs/pull/421) [`ea9b642`](https://github.com/slate-yjs/slate-yjs/commit/ea9b642b3ae1781833de57c16c146bb6cad848be) Thanks [@jul13579](https://github.com/jul13579)! - Fix `getStoredPositions` decoding
+
 ## 1.0.2
 
 ### Patch Changes
