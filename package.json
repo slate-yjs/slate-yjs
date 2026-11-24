@@ -9,6 +9,7 @@
     "lint:typescript": "tsc --build ./ --force",
     "test": "vitest run",
     "test:watch": "vitest",
+    "test:fuzz": "FUZZ=1 vitest run packages/core/test/fuzz",
     "clean": "git clean -dfX",
     "prerelease": "pnpm lint && pnpm test && pnpm build",
     "release": "pnpm prerelease && changeset publish"
@@ -26,6 +27,7 @@
     "eslint-plugin-prettier": "^4.0.0",
     "eslint-plugin-react": "^7.26.1",
     "eslint-plugin-react-hooks": "^4.3.0",
+    "fast-check": "^4.10.3",
     "prettier": "^2.4.1",
     "slate-hyperscript": "^0.138.3",
     "typescript": "^4.6.3",
