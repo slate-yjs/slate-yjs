@@ -35,13 +35,10 @@ const yjsChildren = (editor: YjsEditor) =>
   yTextToSlateElement(editor.sharedRoot).children;
 
 describe('known bugs', () => {
-  // Local changes queued before a remote update (here, Slate normalizing the
-  // previous remote update) are flushed inside the next update's observer,
-  // after Yjs has already integrated it. Their paths resolve against the new
-  // tree and corrupt the document. This is the source of the "sync skew"
-  // errors: "Cannot merge y text with y element", "yOffset out of bounds",
-  // "Path doesn't match yText".
-  it.skip('applies two remote updates in one tick without corrupting the document', () => {
+  // Fixed: local changes queued before a remote update (here, Slate
+  // normalizing the previous remote update) used to be flushed after Yjs had
+  // integrated the next update, at paths that no longer matched.
+  it('applies two remote updates in one tick without corrupting the document', () => {
     const initial = [{ type: 'paragraph', children: [{ text: 'alpha' }] }];
     const docA = seededDoc(initial);
     const docB = new Y.Doc();

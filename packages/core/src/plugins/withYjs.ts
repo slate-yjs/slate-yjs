@@ -265,11 +265,20 @@ export function withYjs<T extends Editor>(
 
   const { apply, onChange } = e;
   e.apply = (op) => {
-    if (YjsEditor.connected(e) && YjsEditor.isLocal(e)) {
+    const isLocalChange = YjsEditor.connected(e) && YjsEditor.isLocal(e);
+    if (isLocalChange) {
       YjsEditor.storeLocalChange(e, op);
     }
 
     apply(op);
+
+    // Write local changes to Yjs right away. A queued change records Slate
+    // paths, so it can only be applied while Yjs still matches the tree it was
+    // recorded against. Once a remote update is integrated, those paths can
+    // point at different nodes.
+    if (isLocalChange) {
+      YjsEditor.flushLocalChanges(e);
+    }
   };
 
   e.onChange = () => {
