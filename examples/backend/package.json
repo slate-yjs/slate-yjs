@@ -13,7 +13,7 @@
   },
   "dependencies": {
     "@hocuspocus/extension-logger": "^1.0.0-alpha.76",
-    "@hocuspocus/extension-sqlite": "^1.0.0-alpha.16",
+    "@hocuspocus/extension-sqlite": "^4.9.0",
     "@hocuspocus/server": "^1.0.0-alpha.102",
     "@slate-yjs/core": "workspace:^",
     "slate": "^0.147.4",
