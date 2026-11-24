@@ -55,11 +55,24 @@ export function absolutePositionToSlatePoint(
   });
 
   const target = parent.children[pathOffset];
-  if (!Text.isText(target)) {
+  if (Text.isText(target)) {
+    return { path: [...parentPath, pathOffset], offset: textOffset };
+  }
+
+  // The position is next to an inline. The text node on that side can be
+  // empty, and empty text isn't stored in Yjs, so the lookup lands on the
+  // inline. Resolve to the end of the text before it or the start of the
+  // text after it.
+  const sideOffset = textOffset === 0 ? pathOffset - 1 : pathOffset + 1;
+  const side = parent.children[sideOffset];
+  if (!Text.isText(side)) {
     return null;
   }
 
-  return { path: [...parentPath, pathOffset], offset: textOffset };
+  return {
+    path: [...parentPath, sideOffset],
+    offset: textOffset === 0 ? side.text.length : 0,
+  };
 }
 
 export function relativePositionToSlatePoint(
