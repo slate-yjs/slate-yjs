@@ -3,6 +3,7 @@ import * as Y from 'yjs';
 import { DeltaInsert, InsertDelta } from '../model/types';
 import { yTextToInsertDelta } from './delta';
 import { getProperties } from './slate';
+import { PRESERVE_CONTENT } from './yjs';
 
 export function yTextToSlateElement(yText: Y.XmlText): Element {
   const delta = yTextToInsertDelta(yText);
@@ -43,6 +44,6 @@ export function slateElementToYText({
     yElement.setAttribute(key, value);
   });
 
-  yElement.applyDelta(slateNodesToInsertDelta(children), { sanitize: false });
+  yElement.applyDelta(slateNodesToInsertDelta(children), PRESERVE_CONTENT);
   return yElement;
 }

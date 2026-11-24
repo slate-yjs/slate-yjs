@@ -7,6 +7,7 @@ import {
   getStoredPositionsInDeltaAbsolute,
   restoreStoredPositionsWithDeltaAbsolute,
 } from '../../utils/position';
+import { PRESERVE_CONTENT } from '../../utils/yjs';
 
 export function splitNode(
   sharedRoot: Y.XmlText,
@@ -72,9 +73,7 @@ export function splitNode(
   );
 
   const toInsert = new Y.XmlText();
-  toInsert.applyDelta(clonedDelta, {
-    sanitize: false,
-  });
+  toInsert.applyDelta(clonedDelta, PRESERVE_CONTENT);
 
   Object.entries(op.properties).forEach(([key, value]) => {
     toInsert.setAttribute(key, value);

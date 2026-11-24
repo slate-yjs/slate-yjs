@@ -1,6 +1,7 @@
 import * as Y from 'yjs';
 import { InsertDelta } from '../model/types';
 import { yTextToInsertDelta } from './delta';
+import { PRESERVE_CONTENT } from './yjs';
 
 export function cloneInsertDeltaDeep(delta: InsertDelta): InsertDelta {
   return delta.map((element) => {
@@ -21,9 +22,10 @@ export function cloneDeep(yText: Y.XmlText): Y.XmlText {
     clone.setAttribute(key, value);
   });
 
-  clone.applyDelta(cloneInsertDeltaDeep(yTextToInsertDelta(yText)), {
-    sanitize: false,
-  });
+  clone.applyDelta(
+    cloneInsertDeltaDeep(yTextToInsertDelta(yText)),
+    PRESERVE_CONTENT
+  );
 
   return clone;
 }
