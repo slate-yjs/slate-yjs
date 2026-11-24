@@ -170,7 +170,18 @@ export function withYjs<T extends Editor>(
   e.positionStorageOrigin =
     positionStorageOrigin ?? DEFAULT_POSITION_STORAGE_ORIGIN;
 
+  let warnedAboutQueuedChanges = false;
   e.applyRemoteEvents = (events, origin) => {
+    // Local changes still queued here were recorded against the tree before
+    // this remote update, so flushing them can target the wrong nodes. Flush
+    // local changes (or call onChange) before applying remote updates.
+    if (!warnedAboutQueuedChanges && YjsEditor.localChanges(e).length > 0) {
+      warnedAboutQueuedChanges = true;
+      // eslint-disable-next-line no-console
+      console.warn(
+        '[slate-yjs] A remote update was applied while local changes were still queued. Call YjsEditor.flushLocalChanges(editor) before applying remote updates in the same task as local edits, or the document can be corrupted.'
+      );
+    }
     YjsEditor.flushLocalChanges(e);
 
     Editor.withoutNormalizing(e, () => {

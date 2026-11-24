@@ -1,6 +1,6 @@
 /* eslint-disable import/no-extraneous-dependencies */
 import { createEditor, Editor, Element, Node, Transforms } from 'slate';
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 import * as Y from 'yjs';
 import {
   slateNodesToInsertDelta,
@@ -79,6 +79,28 @@ describe('known bugs', () => {
     editor.onChange();
 
     expect(yjsChildren(editor)).toEqual(editor.children);
+  });
+
+  // Not fixed yet: a local edit still queued when a remote update is applied
+  // in the same task is flushed against the wrong tree. Until then, it warns.
+  it('warns when a remote update arrives while local edits are queued', () => {
+    const warn = vi.spyOn(console, 'warn').mockImplementation(() => undefined);
+    const initial = [{ type: 'paragraph', children: [{ text: 'alpha' }] }];
+    const docA = seededDoc(initial);
+    const docB = new Y.Doc();
+    Y.applyUpdate(docB, Y.encodeStateAsUpdate(docA));
+    const a = connectedEditor(docA);
+    const b = connectedEditor(docB);
+    const updates: Uint8Array[] = [];
+    docA.on('update', (update: Uint8Array) => updates.push(update));
+    Transforms.insertText(a, 'x', { at: { path: [0, 0], offset: 0 } });
+    a.onChange();
+
+    Transforms.insertText(b, 'y', { at: { path: [0, 0], offset: 5 } });
+    updates.forEach((update) => Y.applyUpdate(docB, update));
+
+    expect(warn).toHaveBeenCalledTimes(1);
+    warn.mockRestore();
   });
 
   // Guard: a Slate transform must reach other clients as one Yjs update.
