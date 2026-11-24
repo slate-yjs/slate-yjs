@@ -110,9 +110,10 @@ describe('known bugs', () => {
     expect(yjsChildren(editor)).toEqual(editor.children);
   });
 
-  // Merging a paragraph whose only text is a soft line break drops the "\n"
-  // from Yjs, while the editor keeps it.
-  it.skip('keeps a lone newline when merging it into the previous paragraph', () => {
+  // Fixed: Yjs strips a trailing "\n" from the last insert of applyDelta when
+  // `sanitize` is false, which dropped a soft line break when merging. The
+  // move and split tests cover the other places that call applyDelta.
+  it('keeps a lone newline when merging it into the previous paragraph', () => {
     const doc = seededDoc([
       { type: 'paragraph', children: [{ text: 'bravo' }] },
       { type: 'paragraph', children: [{ text: '\n' }] },
@@ -198,6 +199,32 @@ describe('known bugs', () => {
 
     expect(b.children).toEqual(a.children);
     expect(Node.string(b)).toBe('onetwo');
+  });
+
+  it('keeps a trailing newline when moving a paragraph', () => {
+    const doc = seededDoc([
+      { type: 'paragraph', children: [{ text: 'alpha' }] },
+      { type: 'paragraph', children: [{ text: 'bravo\n' }] },
+    ]);
+    const editor = connectedEditor(doc);
+    Transforms.moveNodes(editor, { at: [1], to: [0] });
+    editor.onChange();
+
+    expect(yjsChildren(editor)).toEqual(editor.children);
+  });
+
+  it('keeps a trailing newline when splitting a paragraph', () => {
+    const doc = seededDoc([
+      { type: 'paragraph', children: [{ text: 'alpha bravo\n' }] },
+    ]);
+    const editor = connectedEditor(doc);
+    Transforms.splitNodes(editor, {
+      at: { path: [0, 0], offset: 5 },
+      always: true,
+    });
+    editor.onChange();
+
+    expect(yjsChildren(editor)).toEqual(editor.children);
   });
 
   // Yjs can't hold an empty string, so an empty text node's marks are lost.

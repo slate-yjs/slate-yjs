@@ -8,6 +8,7 @@ import {
   getStoredPositionsInDeltaAbsolute,
   restoreStoredPositionsWithDeltaAbsolute,
 } from '../../utils/position';
+import { PRESERVE_CONTENT } from '../../utils/yjs';
 
 export function moveNode(
   sharedRoot: Y.XmlText,
@@ -44,7 +45,7 @@ export function moveNode(
   const deltaApplyYOffset = Math.min(target.textRange.start, targetLength);
   const applyDelta: Delta = [{ retain: deltaApplyYOffset }, ...insertDelta];
 
-  target.yParent.applyDelta(applyDelta, { sanitize: false });
+  target.yParent.applyDelta(applyDelta, PRESERVE_CONTENT);
 
   restoreStoredPositionsWithDeltaAbsolute(
     sharedRoot,

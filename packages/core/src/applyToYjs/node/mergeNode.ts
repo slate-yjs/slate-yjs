@@ -9,6 +9,7 @@ import {
   restoreStoredPositionsWithDeltaAbsolute,
 } from '../../utils/position';
 import { getProperties } from '../../utils/slate';
+import { PRESERVE_CONTENT } from '../../utils/yjs';
 
 export function mergeNode(
   sharedRoot: Y.XmlText,
@@ -63,9 +64,7 @@ export function mergeNode(
 
   const applyDelta: Delta = [{ retain: deltaApplyYOffset }, ...clonedDelta];
 
-  prev.yTarget.applyDelta(applyDelta, {
-    sanitize: false,
-  });
+  prev.yTarget.applyDelta(applyDelta, PRESERVE_CONTENT);
 
   target.yParent.delete(
     target.textRange.start,
