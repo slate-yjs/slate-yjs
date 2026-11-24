@@ -39,6 +39,10 @@ export type Variant = {
   inlines: boolean;
   nested: boolean;
   voids: boolean;
+  // Adds a normalizer that deletes a quote once it has no content, like the
+  // destructive rules many apps have. It catches clients normalizing another
+  // client's half-finished transform.
+  deletingNormalizer: boolean;
   // When true, every edit and every delivered update is followed by a flush,
   // as in a browser where onChange runs before the next network message. When
   // false, some flushes are skipped so remote updates land in the flush window.
@@ -95,7 +99,24 @@ const EDGE_VALUES: unknown[] = [false, 0, '', null, { nested: true }, [1]];
 const PLAIN_VALUES: unknown[] = [true, 'red', 'blue'];
 
 function applySchema<T extends Editor>(editor: T, variant: Variant): T {
-  const { isInline, isVoid } = editor;
+  const { isInline, isVoid, normalizeNode } = editor;
+  if (variant.deletingNormalizer) {
+    editor.normalizeNode = (entry) => {
+      const [node, path] = entry;
+      if (
+        Element.isElement(node) &&
+        node.type === 'quote' &&
+        Node.string(node) === '' &&
+        !Array.from(Node.descendants(node)).some(
+          ([n]) => Element.isElement(n) && editor.isVoid(n)
+        )
+      ) {
+        Transforms.removeNodes(editor, { at: path });
+        return;
+      }
+      normalizeNode(entry);
+    };
+  }
   editor.isInline = (element) =>
     (variant.inlines && element.type === 'link') || isInline(element);
   editor.isVoid = (element) =>

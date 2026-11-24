@@ -51,6 +51,8 @@ Store slate operation as local change.
 
 Flush local changes by applying them to the shared root.
 
+Local changes are queued and written to Yjs in `editor.onChange`, which Slate calls in a microtask after a batch of operations. In a browser this happens before the next network message. If you edit the editor and apply remote updates in the same synchronous task, for example on a server, in tests, or when applying a batch of updates in a loop, call `YjsEditor.flushLocalChanges(editor)` (or `editor.onChange()`) after your edits and before applying the updates. Otherwise the queued changes are applied against a document that has already changed. slate-yjs logs a warning the first time this happens.
+
 **`applyRemoteEvents(editor: YjsEditor, events: Y.YEvent[], origin: unknown): void`**
 
 Apply Yjs events to the editor with origin.

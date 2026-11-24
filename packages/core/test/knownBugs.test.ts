@@ -1,6 +1,6 @@
 /* eslint-disable import/no-extraneous-dependencies */
-import { createEditor, Editor, Transforms } from 'slate';
-import { describe, expect, it } from 'vitest';
+import { createEditor, Editor, Element, Node, Transforms } from 'slate';
+import { describe, expect, it, vi } from 'vitest';
 import * as Y from 'yjs';
 import {
   slateNodesToInsertDelta,
@@ -41,7 +41,7 @@ describe('known bugs', () => {
   // tree and corrupt the document. This is the source of the "sync skew"
   // errors: "Cannot merge y text with y element", "yOffset out of bounds",
   // "Path doesn't match yText".
-  it.skip('applies two remote updates in one tick without corrupting the document', () => {
+  it('applies two remote updates in one tick without corrupting the document', () => {
     const initial = [{ type: 'paragraph', children: [{ text: 'alpha' }] }];
     const docA = seededDoc(initial);
     const docB = new Y.Doc();
@@ -67,6 +67,49 @@ describe('known bugs', () => {
     expect(b.children).toEqual(a.children);
   });
 
+  // Replacing the content as two updates applied in one task, with a
+  // normalizer that keeps at least one child. Normalizing the empty document
+  // in between queues a local change, which must be written before the second
+  // update is applied.
+  it('replaces the content with two remote updates in one task', () => {
+    const withAtLeastOneChild = <T extends Editor>(editor: T) => {
+      const { normalizeNode } = editor;
+      editor.normalizeNode = (entry) => {
+        if (Editor.isEditor(entry[0]) && entry[0].children.length === 0) {
+          Transforms.insertNodes(
+            editor,
+            { type: 'paragraph', children: [{ text: '' }] } as never,
+            { at: [0] }
+          );
+          return;
+        }
+        normalizeNode(entry);
+      };
+      return editor;
+    };
+    const doc = seededDoc([
+      { type: 'paragraph', children: [{ text: 'alpha' }] },
+      { type: 'paragraph', children: [{ text: 'bravo' }] },
+    ]);
+    const sharedRoot = doc.get('content', Y.XmlText) as Y.XmlText;
+    const editor = withYjs(withAtLeastOneChild(createEditor()), sharedRoot);
+    YjsEditor.connect(editor);
+
+    doc.transact(() => sharedRoot.delete(0, sharedRoot.length), 'remote');
+    doc.transact(
+      () =>
+        sharedRoot.applyDelta(
+          slateNodesToInsertDelta([
+            { type: 'paragraph', children: [{ text: 'restored' }] },
+          ] as Editor['children'])
+        ),
+      'remote'
+    );
+    editor.onChange();
+
+    expect(yjsChildren(editor)).toEqual(editor.children);
+  });
+
   // Merging a paragraph whose only text is a soft line break drops the "\n"
   // from Yjs, while the editor keeps it.
   it.skip('keeps a lone newline when merging it into the previous paragraph', () => {
@@ -79,6 +122,82 @@ describe('known bugs', () => {
     editor.onChange();
 
     expect(yjsChildren(editor)).toEqual(editor.children);
+  });
+
+  // Not fixed yet: a local edit still queued when a remote update is applied
+  // in the same task is flushed against the wrong tree. Until then, it warns.
+  it('warns when a remote update arrives while local edits are queued', () => {
+    const warn = vi.spyOn(console, 'warn').mockImplementation(() => undefined);
+    const initial = [{ type: 'paragraph', children: [{ text: 'alpha' }] }];
+    const docA = seededDoc(initial);
+    const docB = new Y.Doc();
+    Y.applyUpdate(docB, Y.encodeStateAsUpdate(docA));
+    const a = connectedEditor(docA);
+    const b = connectedEditor(docB);
+    const updates: Uint8Array[] = [];
+    docA.on('update', (update: Uint8Array) => updates.push(update));
+    Transforms.insertText(a, 'x', { at: { path: [0, 0], offset: 0 } });
+    a.onChange();
+
+    Transforms.insertText(b, 'y', { at: { path: [0, 0], offset: 5 } });
+    updates.forEach((update) => Y.applyUpdate(docB, update));
+
+    expect(warn).toHaveBeenCalledTimes(1);
+    warn.mockRestore();
+  });
+
+  // Guard: a Slate transform must reach other clients as one Yjs update.
+  // Otherwise another client can normalize a half-finished transform, here
+  // deleting the quote before the paragraphs are moved into it.
+  it('keeps a transform atomic for other clients', () => {
+    const withRemoveEmptyQuote = <T extends Editor>(editor: T) => {
+      const { normalizeNode } = editor;
+      editor.normalizeNode = (entry) => {
+        const [node, path] = entry;
+        if (
+          Element.isElement(node) &&
+          node.type === 'quote' &&
+          Node.string(node) === ''
+        ) {
+          Transforms.removeNodes(editor, { at: path });
+          return;
+        }
+        normalizeNode(entry);
+      };
+      return editor;
+    };
+    const initial = [
+      { type: 'paragraph', children: [{ text: 'one' }] },
+      { type: 'paragraph', children: [{ text: 'two' }] },
+    ];
+    const docA = seededDoc(initial);
+    const docB = new Y.Doc();
+    Y.applyUpdate(docB, Y.encodeStateAsUpdate(docA));
+    const a = withYjs(
+      withRemoveEmptyQuote(createEditor()),
+      docA.get('content', Y.XmlText) as Y.XmlText
+    );
+    const b = withYjs(
+      withRemoveEmptyQuote(createEditor()),
+      docB.get('content', Y.XmlText) as Y.XmlText
+    );
+    YjsEditor.connect(a);
+    YjsEditor.connect(b);
+
+    const updates: Uint8Array[] = [];
+    docA.on('update', (update: Uint8Array) => updates.push(update));
+    Transforms.wrapNodes(a, { type: 'quote', children: [] } as never, {
+      at: [],
+      match: (n, p) => p.length === 1,
+    });
+    a.onChange();
+    updates.forEach((update) => {
+      Y.applyUpdate(docB, update);
+      b.onChange();
+    });
+
+    expect(b.children).toEqual(a.children);
+    expect(Node.string(b)).toBe('onetwo');
   });
 
   // Yjs can't hold an empty string, so an empty text node's marks are lost.
