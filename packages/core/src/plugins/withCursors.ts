@@ -180,11 +180,33 @@ export function withCursors<
     e.awareness.setLocalStateField(e.cursorDataField, cursorData);
   };
 
+  // Where the selection was when the cursor was last hidden, or undefined
+  // while it's shown. autoSend leaves a hidden cursor hidden until the
+  // selection moves away from this point. Relative positions don't change
+  // when other clients edit the document.
+  let hiddenAt: RelativeRange | null | undefined;
+
+  const relativeSelection = () =>
+    e.selection
+      ? slateRangeToRelativeRange(e.sharedRoot, e, e.selection)
+      : null;
+
+  const isSameRange = (a: RelativeRange | null, b: RelativeRange | null) =>
+    a === b ||
+    (!!a &&
+      !!b &&
+      Y.compareRelativePositions(a.anchor, b.anchor) &&
+      Y.compareRelativePositions(a.focus, b.focus));
+
   e.sendCursorPosition = (range) => {
     const localState = e.awareness.getLocalState();
-    const currentRange = localState?.[selectionStateField];
+    const currentRange = localState?.[selectionStateField] as
+      | RelativeRange
+      | null
+      | undefined;
 
     if (!range) {
+      hiddenAt = relativeSelection();
       if (currentRange) {
         e.awareness.setLocalStateField(e.selectionStateField, null);
       }
@@ -192,14 +214,10 @@ export function withCursors<
       return;
     }
 
-    const { anchor, focus } = slateRangeToRelativeRange(e.sharedRoot, e, range);
-
-    if (
-      !currentRange ||
-      !Y.compareRelativePositions(anchor, currentRange) ||
-      !Y.compareRelativePositions(focus, currentRange)
-    ) {
-      e.awareness.setLocalStateField(e.selectionStateField, { anchor, focus });
+    hiddenAt = undefined;
+    const relativeRange = slateRangeToRelativeRange(e.sharedRoot, e, range);
+    if (!currentRange || !isSameRange(relativeRange, currentRange)) {
+      e.awareness.setLocalStateField(e.selectionStateField, relativeRange);
     }
   };
 
@@ -246,9 +264,18 @@ export function withCursors<
       e.onChange = () => {
         onChange();
 
-        if (YjsEditor.connected(e)) {
-          CursorEditor.sendCursorPosition(e);
+        if (!YjsEditor.connected(e)) {
+          return;
         }
+
+        if (
+          hiddenAt !== undefined &&
+          isSameRange(relativeSelection(), hiddenAt)
+        ) {
+          return;
+        }
+
+        CursorEditor.sendCursorPosition(e);
       };
     }
   };

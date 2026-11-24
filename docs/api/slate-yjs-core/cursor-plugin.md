@@ -10,7 +10,7 @@
 
 `withCursors` expects a [y-protocols Awareness](https://github.com/yjs/y-protocols#awarenessprotocolawareness-class) used to send and retrieve cursor data as the 2nd argument. It also takes an optional third argument with the following options:
 
-**`selectionStateField?: string`**
+**`cursorStateField?: string`**
 
 Local state field used for storing the current selection state. Defaults to `selection`. If you have multiple slate docs inside the same Y.Doc, you might want to prefix this with the path of the shared root inside the Y.Doc.
 
@@ -24,7 +24,7 @@ Data attached to the current client. Useful for storing user ids, cursor colors,
 
 **`autoSend?: boolean`**
 
-Whether to automatically send cursor data and selection information on change. Defaults to `true`.
+Whether to automatically send cursor data and selection information on change. Defaults to `true`. After the cursor is hidden with `CursorEditor.sendCursorPosition(editor, null)`, for example on blur, it stays hidden until the local selection moves.
 
 <br/>
 
@@ -32,7 +32,7 @@ Whether to automatically send cursor data and selection information on change. D
 
 ```javascript
 const editor = useMemo(
-  () => withCursors(withYjs(createEditor(), sharedType)),
+  () => withCursors(withYjs(createEditor(), sharedType), provider.awareness),
   []
 );
 ```
