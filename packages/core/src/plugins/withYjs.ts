@@ -178,6 +178,12 @@ export function withYjs<T extends Editor>(
         applyYjsEvents(e.sharedRoot, e, events);
       });
     });
+
+    // Normalizing the remote change can queue local changes. Write them now,
+    // while Yjs still matches the tree they were recorded against. If another
+    // remote update were applied first, their paths could point at different
+    // nodes.
+    YjsEditor.flushLocalChanges(e);
   };
 
   e.isLocalOrigin = (origin) => origin === e.localOrigin;

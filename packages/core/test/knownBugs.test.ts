@@ -1,5 +1,5 @@
 /* eslint-disable import/no-extraneous-dependencies */
-import { createEditor, Editor, Transforms } from 'slate';
+import { createEditor, Editor, Element, Node, Transforms } from 'slate';
 import { describe, expect, it } from 'vitest';
 import * as Y from 'yjs';
 import {
@@ -41,7 +41,7 @@ describe('known bugs', () => {
   // tree and corrupt the document. This is the source of the "sync skew"
   // errors: "Cannot merge y text with y element", "yOffset out of bounds",
   // "Path doesn't match yText".
-  it.skip('applies two remote updates in one tick without corrupting the document', () => {
+  it('applies two remote updates in one tick without corrupting the document', () => {
     const initial = [{ type: 'paragraph', children: [{ text: 'alpha' }] }];
     const docA = seededDoc(initial);
     const docB = new Y.Doc();
@@ -79,6 +79,60 @@ describe('known bugs', () => {
     editor.onChange();
 
     expect(yjsChildren(editor)).toEqual(editor.children);
+  });
+
+  // Guard: a Slate transform must reach other clients as one Yjs update.
+  // Otherwise another client can normalize a half-finished transform, here
+  // deleting the quote before the paragraphs are moved into it.
+  it('keeps a transform atomic for other clients', () => {
+    const withRemoveEmptyQuote = <T extends Editor>(editor: T) => {
+      const { normalizeNode } = editor;
+      editor.normalizeNode = (entry) => {
+        const [node, path] = entry;
+        if (
+          Element.isElement(node) &&
+          node.type === 'quote' &&
+          Node.string(node) === ''
+        ) {
+          Transforms.removeNodes(editor, { at: path });
+          return;
+        }
+        normalizeNode(entry);
+      };
+      return editor;
+    };
+    const initial = [
+      { type: 'paragraph', children: [{ text: 'one' }] },
+      { type: 'paragraph', children: [{ text: 'two' }] },
+    ];
+    const docA = seededDoc(initial);
+    const docB = new Y.Doc();
+    Y.applyUpdate(docB, Y.encodeStateAsUpdate(docA));
+    const a = withYjs(
+      withRemoveEmptyQuote(createEditor()),
+      docA.get('content', Y.XmlText) as Y.XmlText
+    );
+    const b = withYjs(
+      withRemoveEmptyQuote(createEditor()),
+      docB.get('content', Y.XmlText) as Y.XmlText
+    );
+    YjsEditor.connect(a);
+    YjsEditor.connect(b);
+
+    const updates: Uint8Array[] = [];
+    docA.on('update', (update: Uint8Array) => updates.push(update));
+    Transforms.wrapNodes(a, { type: 'quote', children: [] } as never, {
+      at: [],
+      match: (n, p) => p.length === 1,
+    });
+    a.onChange();
+    updates.forEach((update) => {
+      Y.applyUpdate(docB, update);
+      b.onChange();
+    });
+
+    expect(b.children).toEqual(a.children);
+    expect(Node.string(b)).toBe('onetwo');
   });
 
   // Yjs can't hold an empty string, so an empty text node's marks are lost.

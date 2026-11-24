@@ -18,6 +18,7 @@ const BASE: Variant = {
   inlines: false,
   nested: false,
   voids: false,
+  deletingNormalizer: false,
   eagerFlush: true,
 };
 
@@ -29,6 +30,12 @@ const VARIANTS: Variant[] = [
   { ...BASE, name: 'inlines', inlines: true },
   { ...BASE, name: 'nested blocks', nested: true },
   { ...BASE, name: 'voids', voids: true },
+  {
+    ...BASE,
+    name: 'nested, deleting normalizer',
+    nested: true,
+    deletingNormalizer: true,
+  },
   { ...BASE, name: 'blocks, stale flush', eagerFlush: false },
   {
     ...BASE,
@@ -38,6 +45,7 @@ const VARIANTS: Variant[] = [
     inlines: true,
     nested: true,
     voids: true,
+    deletingNormalizer: true,
     eagerFlush: false,
   },
 ];
