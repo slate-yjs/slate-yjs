@@ -1,5 +1,17 @@
 # @slate-yjs/core
 
+## 1.0.4
+
+### Patch Changes
+
+- [#452](https://github.com/slate-yjs/slate-yjs/pull/452) [`968a580`](https://github.com/slate-yjs/slate-yjs/commit/968a5806b3a46977a6a559c0808032a2a2f6a6f3) Thanks [@juliankrispel](https://github.com/juliankrispel)! - Write the changes produced by normalizing a remote update to Yjs straight away. They were queued until `onChange`, so a second remote update applied first left them pointing at the wrong nodes, which corrupted the document or threw errors such as "Cannot merge y text with y element" and "yOffset out of bounds".
+
+  Also warns once per editor when a remote update is applied while local edits are still queued, which can still corrupt the document. Call `YjsEditor.flushLocalChanges(editor)` before applying remote updates in the same task as local edits.
+
+- [#453](https://github.com/slate-yjs/slate-yjs/pull/453) [`6e012de`](https://github.com/slate-yjs/slate-yjs/commit/6e012deb8f547a82a51ff291a0c04c1e7f11429d) Thanks [@juliankrispel](https://github.com/juliankrispel)! - Keep a trailing soft line break (`\n`) when merging nodes. Yjs drops a trailing newline from `applyDelta` when `sanitize` is false.
+
+- [#443](https://github.com/slate-yjs/slate-yjs/pull/443) [`82077b5`](https://github.com/slate-yjs/slate-yjs/commit/82077b592708c38277b1a7a1f3781e3f4fa83be6) Thanks [@juliankrispel](https://github.com/juliankrispel)! - Publish only `dist`, `src`, the changelog and the license, leaving tests and build config out of the package.
+
 ## 1.0.3
 
 ### Patch Changes
