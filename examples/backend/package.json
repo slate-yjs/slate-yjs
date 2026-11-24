@@ -16,7 +16,7 @@
     "@hocuspocus/extension-sqlite": "^1.0.0-alpha.16",
     "@hocuspocus/server": "^1.0.0-alpha.102",
     "@slate-yjs/core": "workspace:^",
-    "slate": "^0.82.1",
-    "yjs": "^13.5.29"
+    "slate": "^0.147.4",
+    "yjs": "^13.6.33"
   }
 }

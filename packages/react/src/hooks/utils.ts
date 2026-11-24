@@ -36,7 +36,7 @@ export function useRequestRerender() {
 }
 
 export function useOnResize<T extends HTMLElement>(
-  ref: RefObject<T> | undefined,
+  ref: RefObject<T | null> | undefined,
   onResize: () => void
 ) {
   const onResizeRef = useRef(onResize);

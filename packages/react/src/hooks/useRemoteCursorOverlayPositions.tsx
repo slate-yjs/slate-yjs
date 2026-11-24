@@ -31,7 +31,7 @@ export type UseRemoteCursorOverlayPositionsOptions<T extends HTMLElement> = {
       containerRef?: undefined;
     }
   | {
-      containerRef: RefObject<T>;
+      containerRef: RefObject<T | null>;
 
       // Whether to refresh the cursor overlay positions on container resize. Defaults
       // to true. If set to 'debounced', the remote cursor positions will be updated
