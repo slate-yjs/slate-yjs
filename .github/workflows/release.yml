@@ -13,9 +13,14 @@ concurrency: ${{ github.workflow }}-${{ github.ref }}
 jobs:
   release:
     name: Release
+    # Only main can deploy to this environment, and the npm trusted publisher
+    # is bound to it, so a copy of this workflow on another branch cannot publish.
+    environment: release
     permissions:
       contents: write
       pull-requests: write
+      # Lets pnpm exchange a GitHub OIDC token for a short-lived npm publish token.
+      id-token: write
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Repo
@@ -31,7 +36,6 @@ jobs:
         with:
           cache: pnpm
           node-version-file: '.nvmrc'
-          registry-url: https://registry.npmjs.org/
 
       - name: Install Dependencies
         run: pnpm install --frozen-lockfile
@@ -42,5 +46,3 @@ jobs:
           publish: pnpm release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
