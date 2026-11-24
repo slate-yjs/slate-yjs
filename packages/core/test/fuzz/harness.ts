@@ -260,6 +260,7 @@ function applyLocalEdit(
     'setBlockType',
     'insertBlock',
     'removeBlock',
+    'moveSibling',
     ...(variant.marks ? ['setMark', 'unsetMark'] : []),
     ...(variant.inlines ? ['wrapLink', 'unwrapLink', 'insertLink'] : []),
     ...(variant.nested ? ['wrapQuote', 'unwrapQuote'] : []),
@@ -327,6 +328,20 @@ function applyLocalEdit(
       const at = pick(blockPaths(editor, false), a);
       if (!at) return false;
       Transforms.removeNodes(editor, { at });
+      return true;
+    }
+    case 'moveSibling': {
+      // Moves any node, text and inlines included, within its parent.
+      const entry = pick(
+        Array.from(Node.nodes(editor)).filter(([, p]) => p.length > 0),
+        a
+      );
+      if (!entry) return false;
+      const [, at] = entry;
+      const parent = Node.parent(editor, at);
+      const to = [...Path.parent(at), Math.abs(b) % parent.children.length];
+      if (Path.equals(at, to)) return false;
+      Transforms.moveNodes(editor, { at, to });
       return true;
     }
     case 'setMark': {
