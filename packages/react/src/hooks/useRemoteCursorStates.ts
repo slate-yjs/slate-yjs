@@ -4,7 +4,7 @@ import { useSyncExternalStoreWithSelector } from 'use-sync-external-store/shim/w
 import { useRemoteCursorStateStore } from './useRemoteCursorStateStore';
 
 export function useRemoteCursorStates<
-  TCursorData extends Record<string, unknown> = Record<string, unknown>
+  TCursorData extends Record<string, unknown> = Record<string, unknown>,
 >() {
   const [subscribe, getSnapshot] = useRemoteCursorStateStore<TCursorData>();
   return useSyncExternalStore(subscribe, getSnapshot);
@@ -12,7 +12,7 @@ export function useRemoteCursorStates<
 
 export function useRemoteCursorStatesSelector<
   TCursorData extends Record<string, unknown> = Record<string, unknown>,
-  TSelection = unknown
+  TSelection = unknown,
 >(
   selector: (cursors: Record<string, CursorState<TCursorData>>) => TSelection,
   isEqual?: (a: TSelection, b: TSelection) => boolean

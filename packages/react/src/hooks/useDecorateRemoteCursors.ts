@@ -9,7 +9,7 @@ export const REMOTE_CURSOR_DECORATION_PREFIX = 'remote-cursor-';
 export const REMOTE_CURSOR_CARET_DECORATION_PREFIX = 'remote-caret-';
 
 export type RemoteCaretDecoration<
-  TCursorData extends Record<string, unknown> = Record<string, unknown>
+  TCursorData extends Record<string, unknown> = Record<string, unknown>,
 > = {
   [
     key: `${typeof REMOTE_CURSOR_CARET_DECORATION_PREFIX}${string}`
@@ -17,7 +17,7 @@ export type RemoteCaretDecoration<
 };
 
 export type RemoteCursorDecoration<
-  TCursorData extends Record<string, unknown> = Record<string, unknown>
+  TCursorData extends Record<string, unknown> = Record<string, unknown>,
 > = {
   [
     key: `${typeof REMOTE_CURSOR_DECORATION_PREFIX}${string}`
@@ -25,22 +25,22 @@ export type RemoteCursorDecoration<
 };
 
 export type RemoteCursorDecoratedRange<
-  TCursorData extends Record<string, unknown> = Record<string, unknown>
+  TCursorData extends Record<string, unknown> = Record<string, unknown>,
 > = BaseRange & RemoteCursorDecoration<TCursorData>;
 
 export type RemoteCaretDecoratedRange<
-  TCursorData extends Record<string, unknown> = Record<string, unknown>
+  TCursorData extends Record<string, unknown> = Record<string, unknown>,
 > = BaseRange & RemoteCaretDecoration<TCursorData>;
 
 export type TextWithRemoteCursors<
-  TCursorData extends Record<string, unknown> = Record<string, unknown>
+  TCursorData extends Record<string, unknown> = Record<string, unknown>,
 > = BaseText &
   RemoteCursorDecoration<TCursorData> &
   RemoteCaretDecoration<TCursorData>;
 
 export function getRemoteCursorsOnLeaf<
   TCursorData extends Record<string, unknown>,
-  TLeaf extends TextWithRemoteCursors<TCursorData>
+  TLeaf extends TextWithRemoteCursors<TCursorData>,
 >(leaf: TLeaf): CursorState<TCursorData>[] {
   return Object.entries(leaf)
     .filter(([key]) => key.startsWith(REMOTE_CURSOR_DECORATION_PREFIX))
@@ -49,7 +49,7 @@ export function getRemoteCursorsOnLeaf<
 
 export function getRemoteCaretsOnLeaf<
   TCursorData extends Record<string, unknown>,
-  TLeaf extends TextWithRemoteCursors<TCursorData>
+  TLeaf extends TextWithRemoteCursors<TCursorData>,
 >(leaf: TLeaf): (CursorState<TCursorData> & { isBackward: boolean })[] {
   return Object.entries(leaf)
     .filter(([key]) => key.startsWith(REMOTE_CURSOR_CARET_DECORATION_PREFIX))
@@ -62,7 +62,7 @@ export type UseDecorateRemoteCursorsOptions = {
 
 function getDecoration<
   TCursorData extends Record<string, unknown>,
-  TCaret extends boolean
+  TCaret extends boolean,
 >(
   clientId: string,
   state: CursorState<TCursorData>,
@@ -85,7 +85,7 @@ function getDecoration<
 }
 
 export function useDecorateRemoteCursors<
-  TCursorData extends Record<string, unknown> = Record<string, unknown>
+  TCursorData extends Record<string, unknown> = Record<string, unknown>,
 >({ carets = true }: UseDecorateRemoteCursorsOptions = {}) {
   const editor = useRemoteCursorEditor<TCursorData>();
   const cursors = useRemoteCursorStates<TCursorData>();

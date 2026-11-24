@@ -2,7 +2,7 @@ import { CursorEditor } from '@slate-yjs/core';
 import { ReactEditor, useSlateStatic } from 'slate-react';
 
 export function useRemoteCursorEditor<
-  TCursorData extends Record<string, unknown> = Record<string, unknown>
+  TCursorData extends Record<string, unknown> = Record<string, unknown>,
 >(): CursorEditor<TCursorData> & ReactEditor {
   const editor = useSlateStatic();
   if (!CursorEditor.isCursorEditor(editor)) {

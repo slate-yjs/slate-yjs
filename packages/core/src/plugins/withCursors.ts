@@ -21,7 +21,7 @@ const CURSOR_CHANGE_EVENT_LISTENERS: WeakMap<
 > = new WeakMap();
 
 export type CursorState<
-  TCursorData extends Record<string, unknown> = Record<string, unknown>
+  TCursorData extends Record<string, unknown> = Record<string, unknown>,
 > = {
   relativeSelection: RelativeRange | null;
   data?: TCursorData;
@@ -29,7 +29,7 @@ export type CursorState<
 };
 
 export type CursorEditor<
-  TCursorData extends Record<string, unknown> = Record<string, unknown>
+  TCursorData extends Record<string, unknown> = Record<string, unknown>,
 > = YjsEditor & {
   awareness: Awareness;
 
@@ -145,7 +145,7 @@ export const CursorEditor = {
 };
 
 export type WithCursorsOptions<
-  TCursorData extends Record<string, unknown> = Record<string, unknown>
+  TCursorData extends Record<string, unknown> = Record<string, unknown>,
 > = {
   // Local state field used to store the user selection
   cursorStateField?: string;
@@ -159,7 +159,7 @@ export type WithCursorsOptions<
 
 export function withCursors<
   TCursorData extends Record<string, unknown>,
-  TEditor extends YjsEditor
+  TEditor extends YjsEditor,
 >(
   editor: TEditor,
   awareness: Awareness,
@@ -201,9 +201,7 @@ export function withCursors<
   e.sendCursorPosition = (range) => {
     const localState = e.awareness.getLocalState();
     const currentRange = localState?.[selectionStateField] as
-      | RelativeRange
-      | null
-      | undefined;
+      RelativeRange | null | undefined;
 
     if (!range) {
       hiddenAt = relativeSelection();
