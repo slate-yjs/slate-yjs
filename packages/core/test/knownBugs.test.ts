@@ -67,6 +67,49 @@ describe('known bugs', () => {
     expect(b.children).toEqual(a.children);
   });
 
+  // Replacing the content as two updates applied in one task, with a
+  // normalizer that keeps at least one child. Normalizing the empty document
+  // in between queues a local change, which must be written before the second
+  // update is applied.
+  it('replaces the content with two remote updates in one task', () => {
+    const withAtLeastOneChild = <T extends Editor>(editor: T) => {
+      const { normalizeNode } = editor;
+      editor.normalizeNode = (entry) => {
+        if (Editor.isEditor(entry[0]) && entry[0].children.length === 0) {
+          Transforms.insertNodes(
+            editor,
+            { type: 'paragraph', children: [{ text: '' }] } as never,
+            { at: [0] }
+          );
+          return;
+        }
+        normalizeNode(entry);
+      };
+      return editor;
+    };
+    const doc = seededDoc([
+      { type: 'paragraph', children: [{ text: 'alpha' }] },
+      { type: 'paragraph', children: [{ text: 'bravo' }] },
+    ]);
+    const sharedRoot = doc.get('content', Y.XmlText) as Y.XmlText;
+    const editor = withYjs(withAtLeastOneChild(createEditor()), sharedRoot);
+    YjsEditor.connect(editor);
+
+    doc.transact(() => sharedRoot.delete(0, sharedRoot.length), 'remote');
+    doc.transact(
+      () =>
+        sharedRoot.applyDelta(
+          slateNodesToInsertDelta([
+            { type: 'paragraph', children: [{ text: 'restored' }] },
+          ] as Editor['children'])
+        ),
+      'remote'
+    );
+    editor.onChange();
+
+    expect(yjsChildren(editor)).toEqual(editor.children);
+  });
+
   // Merging a paragraph whose only text is a soft line break drops the "\n"
   // from Yjs, while the editor keeps it.
   it.skip('keeps a lone newline when merging it into the previous paragraph', () => {
