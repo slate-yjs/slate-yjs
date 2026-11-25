@@ -8,6 +8,9 @@ export default defineConfig([
     outDir: 'dist',
     format: ['esm'],
     platform: 'node',
+    target: 'node24',
+    // Keep node: imports; node:sqlite has no unprefixed form.
+    removeNodeProtocol: false,
     splitting: false,
     bundle: true,
     sourcemap: false,

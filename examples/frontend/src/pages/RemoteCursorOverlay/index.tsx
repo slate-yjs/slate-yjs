@@ -31,7 +31,6 @@ export function RemoteCursorsOverlayPage() {
             setSynced(true);
           }
         },
-        connect: false,
       }),
     []
   );
@@ -53,7 +52,8 @@ export function RemoteCursorsOverlayPage() {
           withYHistory(
             withCursors(
               withYjs(createEditor(), sharedType, { autoConnect: false }),
-              provider.awareness,
+              // Awareness is only null when the provider is created with awareness: null.
+              provider.awareness!,
               {
                 data: randomCursorData(),
               }
