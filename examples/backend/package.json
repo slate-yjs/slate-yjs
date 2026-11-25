@@ -9,7 +9,7 @@
     "dev": "tsup --watch --onSuccess \"pnpm run start\""
   },
   "devDependencies": {
-    "tsup": "^5.12.1"
+    "tsup": "^9.0.0"
   },
   "dependencies": {
     "@hocuspocus/extension-logger": "^1.0.0-alpha.76",
