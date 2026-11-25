@@ -1,5 +1,11 @@
 # @slate-yjs/core
 
+## 1.0.6
+
+### Patch Changes
+
+- [#459](https://github.com/slate-yjs/slate-yjs/pull/459) [`fc0675d`](https://github.com/slate-yjs/slate-yjs/commit/fc0675d14087df4cd2e419a2110bcc25973c4357) Thanks [@juliankrispel](https://github.com/juliankrispel)! - Convert a position next to an inline back to a Slate point. A point in the empty text before or after an inline, for example a caret after a link at the end of a paragraph, converted back to `null`, so remote cursors there weren't shown.
+
 ## 1.0.5
 
 ### Patch Changes
