@@ -20,11 +20,12 @@
   "types": "dist/index.d.ts",
   "files": [
     "dist",
+    "!dist/tsconfig.tsbuildinfo",
     "src",
     "CHANGELOG.md"
   ],
   "scripts": {
-    "build": "tsup && tsc --emitDeclarationOnly",
+    "build": "tsup && tsc --emitDeclarationOnly --tsBuildInfoFile dist/tsconfig.tsbuildinfo",
     "dev": "tsup --watch"
   },
   "repository": {
