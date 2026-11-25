@@ -1,5 +1,11 @@
 # @slate-yjs/core
 
+## 1.0.8
+
+### Patch Changes
+
+- [#480](https://github.com/slate-yjs/slate-yjs/pull/480) [`9287f17`](https://github.com/slate-yjs/slate-yjs/commit/9287f172487db3dd677304089570a1aa80385cdd) Thanks [@juliankrispel](https://github.com/juliankrispel)! - Restore the previous origin when the callback passed to `YjsEditor.withOrigin` throws. If applying a remote update threw, the editor kept the remote origin, so local edits were no longer recorded or written to Yjs, even after reconnecting.
+
 ## 1.0.7
 
 ### Patch Changes
