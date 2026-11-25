@@ -8,6 +8,11 @@ updates:
     # the release-age check.
     cooldown:
       default-days: 3
+    ignore:
+      # TypeScript 7 has no JavaScript compiler API, which typescript-eslint
+      # needs. Revisit once typescript-eslint supports it.
+      - dependency-name: typescript
+        versions: ['>=7']
     groups:
       # Minor and patch updates land as one PR per week. Major updates get
       # their own PRs.
