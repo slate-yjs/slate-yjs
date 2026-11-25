@@ -15,8 +15,8 @@
     "release": "pnpm prerelease && changeset publish"
   },
   "devDependencies": {
-    "@changesets/changelog-github": "^0.4.7",
-    "@changesets/cli": "^2.25.0",
+    "@changesets/changelog-github": "^1.0.1",
+    "@changesets/cli": "^3.0.3",
     "@typescript-eslint/eslint-plugin": "^5.17.0",
     "@typescript-eslint/parser": "^5.17.0",
     "eslint": "^8.1.0",
