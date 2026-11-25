@@ -42,7 +42,7 @@
     "slate-dom": "^0.147.3",
     "slate-react": "^0.147.6",
     "tsup": "^9.0.0",
-    "typescript": "^4.6.3",
+    "typescript": "^6.0.3",
     "yjs": "^13.6.33"
   },
   "peerDependencies": {

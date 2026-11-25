@@ -9,6 +9,7 @@
     "dev": "tsup --watch --onSuccess \"pnpm run start\""
   },
   "devDependencies": {
+    "@types/node": "^24.19.2",
     "tsup": "^9.0.0"
   },
   "dependencies": {

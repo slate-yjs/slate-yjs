@@ -7,7 +7,7 @@ import { useSlate } from 'slate-react';
 
 function isFormatActive(editor: Editor, format: string) {
   const [match] = Editor.nodes(editor, {
-    match: (n) => Text.isText(n) && !n[format],
+    match: (n) => Text.isText(n) && !n[format as keyof typeof n],
     mode: 'all',
   });
   return !match;
