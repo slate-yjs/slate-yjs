@@ -45,7 +45,10 @@ export function deltaInsertToSlateNode(
       return { ...omitEmptyTextAttribute(insert.attributes), text: '' };
     }
 
-    return { ...insert.attributes, text: insert.insert };
+    return {
+      ...omitEmptyTextAttribute(insert.attributes),
+      text: insert.insert,
+    };
   }
 
   return yTextToSlateElement(insert.insert, options);

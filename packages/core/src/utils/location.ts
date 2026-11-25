@@ -123,7 +123,7 @@ export function yOffsetToSlateOffsets(
       yParentDelta,
       yOffset: currentOffset,
     });
-    const textLength = Text.isText(child) ? child.text.length : 0;
+    const textLength = Text.isText(child) ? child.text.length : 1;
 
     if (nodeLength > 0) {
       lastNonEmptyPathOffset = pathOffset;
@@ -205,7 +205,7 @@ export function getSlatePath(
       yParentDelta: currentDelta,
     });
 
-    const child = slateParent.children.at(pathOffset);
+    const child = slateParent.children[pathOffset];
     slateParent = !child || Text.isText(child) ? null : child;
 
     if (!slateParent && !isLast) {

@@ -40,6 +40,7 @@ const VARIANTS: (Variant & { knownBug?: string })[] = [
     edgeMarkValues: true,
   },
   { ...BASE, name: 'inlines', inlines: true },
+  { ...BASE, name: 'marks and inlines', marks: true, inlines: true },
   { ...BASE, name: 'nested blocks', nested: true },
   { ...BASE, name: 'voids', voids: true },
   {

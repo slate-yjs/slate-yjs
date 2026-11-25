@@ -1,4 +1,4 @@
-import { Editor, Node, Path, Text, Transforms } from 'slate';
+import { Editor, Node, Path, Range, Text, Transforms } from 'slate';
 import * as Y from 'yjs';
 import { Delta } from '../model/types';
 import { deltaInsertToSlateNode } from '../utils/convert';
@@ -66,7 +66,10 @@ function applyDelta(
 
         for (const at of getTargetsInRange(change.retain)) {
           if (Path.isPath(at)) {
-            Transforms.setNodes(editor, newProperties, { at, voids: true });
+            // Yjs ignores attributes on embeds, so only texts take marks.
+            if (Text.isText(Node.get(editor, at))) {
+              Transforms.setNodes(editor, newProperties, { at, voids: true });
+            }
           } else {
             Transforms.setNodes(editor, newProperties, {
               at,
@@ -86,7 +89,19 @@ function applyDelta(
         if (Path.isPath(at)) {
           Transforms.removeNodes(editor, { at, voids: true });
         } else {
-          Transforms.delete(editor, { at, voids: true });
+          // The range is within one text node. Transforms.delete would look up
+          // the document end, which throws while a block is briefly empty.
+          const { path, offset } = Range.start(at);
+          const end = Range.end(at).offset;
+          const node = Node.get(editor, path);
+          if (Text.isText(node)) {
+            editor.apply({
+              type: 'remove_text',
+              path,
+              offset,
+              text: node.text.slice(offset, end),
+            });
+          }
         }
       }
       return;

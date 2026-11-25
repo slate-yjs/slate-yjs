@@ -2,7 +2,7 @@ import { Editor, Node, Path, Point, Text } from 'slate';
 import { DeltaInsert, InsertDelta } from '../model/types';
 import { getSlateNodeYLength } from '../utils/location';
 import {
-  hasEmptyTextAttribute,
+  isDeltaInsertEmptyText,
   omitEmptyTextAttribute,
 } from '../utils/emptyText';
 
@@ -31,7 +31,7 @@ export function getInsertMethod({
 }): InsertMethod {
   const properties = omitEmptyTextAttribute(attributes);
   const isInsertText = typeof insert === 'string';
-  const isInsertEmptyText = isInsertText && hasEmptyTextAttribute(attributes);
+  const isInsertEmptyText = isDeltaInsertEmptyText({ insert, attributes });
   const children = Array.from(Node.children(editor, parentPath));
 
   let currentOffset = 0;

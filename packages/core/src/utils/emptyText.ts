@@ -49,8 +49,14 @@ export function omitEmptyTextAttribute<
   ) as T;
 }
 
-export function isDeltaInsertEmptyText({ attributes }: DeltaInsert): boolean {
-  return hasEmptyTextAttribute(attributes);
+// Only the single marker char is an empty text. Older clients can type into
+// it or paste it, which stores longer text with the marker attribute; that
+// text must stay visible.
+export function isDeltaInsertEmptyText({
+  insert,
+  attributes,
+}: DeltaInsert): boolean {
+  return insert === EMPTY_TEXT_CHAR && hasEmptyTextAttribute(attributes);
 }
 
 export function isInsertDeltaEmptyText([deltaInsert]: InsertDelta): boolean {
