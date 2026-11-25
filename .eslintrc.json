@@ -75,6 +75,15 @@
     "react/require-default-props": "off",
     "react/no-unescaped-entities": "off"
   },
+  "overrides": [
+    {
+      // slate-hyperscript fixtures pass marks such as `bold` as JSX props.
+      "files": ["**/test/**/*.tsx"],
+      "rules": {
+        "react/no-unknown-property": "off"
+      }
+    }
+  ],
   "settings": {
     "import/resolver": {
       "node": {

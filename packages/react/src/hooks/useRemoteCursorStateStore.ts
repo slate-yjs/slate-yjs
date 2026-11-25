@@ -8,13 +8,13 @@ import { Store } from '../types';
 import { useRemoteCursorEditor } from './useRemoteCursorEditor';
 
 export type CursorStore<
-  TCursorData extends Record<string, unknown> = Record<string, unknown>
+  TCursorData extends Record<string, unknown> = Record<string, unknown>,
 > = Store<Record<string, CursorState<TCursorData>>>;
 
 const EDITOR_TO_CURSOR_STORE: WeakMap<BaseEditor, CursorStore> = new WeakMap();
 
 function createRemoteCursorStateStore<
-  TCursorData extends Record<string, unknown>
+  TCursorData extends Record<string, unknown>,
 >(editor: CursorEditor<TCursorData>): CursorStore<TCursorData> {
   let cursors: Record<string, CursorState<TCursorData>> = {};
 
@@ -82,7 +82,7 @@ function getCursorStateStore<TCursorData extends Record<string, unknown>>(
 }
 
 export function useRemoteCursorStateStore<
-  TCursorData extends Record<string, unknown> = Record<string, unknown>
+  TCursorData extends Record<string, unknown> = Record<string, unknown>,
 >() {
   const editor = useRemoteCursorEditor<TCursorData>();
   return getCursorStateStore(editor);

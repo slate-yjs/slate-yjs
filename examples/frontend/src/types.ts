@@ -41,11 +41,7 @@ export type BlockQuote = {
 };
 
 export type CustomElement =
-  | Paragraph
-  | InlineCode
-  | HeadingOne
-  | HeadingTwo
-  | BlockQuote;
+  Paragraph | InlineCode | HeadingOne | HeadingTwo | BlockQuote;
 
 export type CustomEditor = ReactEditor &
   YjsEditor &

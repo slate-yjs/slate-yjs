@@ -23,11 +23,11 @@ Cons:
 **`carets`**
 
 If set to true, useDecorateRemoteCursors will provide explicit decorations for remote carets. Defaults to true. Carets will be decorated
-as `` { [`remote-cursor-${id}`]: CursorState<TCursorData> } ``
+as ``{ [`remote-cursor-${id}`]: CursorState<TCursorData> }``
 
 <br/>
 
-and returns a decorate function meant to be passed to `Editable.decorate`. Cursor ranges will be decorated as `` { [`remote-cursor-${id}`]: CursorState<TCursorData> } `` and carets (if not disabled) as `` { [`remote-caret-${id}`]: CursorState<TCursorData> & { isBackward: boolean } } ``.
+and returns a decorate function meant to be passed to `Editable.decorate`. Cursor ranges will be decorated as ``{ [`remote-cursor-${id}`]: CursorState<TCursorData> }`` and carets (if not disabled) as ``{ [`remote-caret-${id}`]: CursorState<TCursorData> & { isBackward: boolean } }``.
 Both decoration types can be received on a leaf-level using the `getRemoteCursorsOnLeaf` and `getRemoteCaretsOnLeaf` helpers.
 
 <br/>

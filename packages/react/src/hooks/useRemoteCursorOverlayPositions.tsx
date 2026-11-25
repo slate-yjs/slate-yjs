@@ -49,7 +49,7 @@ export type CursorOverlayData<TCursorData extends Record<string, unknown>> =
 
 export function useRemoteCursorOverlayPositions<
   TCursorData extends Record<string, unknown>,
-  TContainer extends HTMLElement = HTMLDivElement
+  TContainer extends HTMLElement = HTMLDivElement,
 >({
   containerRef,
   shouldGenerateOverlay,
@@ -67,7 +67,7 @@ export function useRemoteCursorOverlayPositions<
   >({});
 
   const refreshOnResize =
-    'refreshOnResize' in opts ? opts.refreshOnResize ?? true : true;
+    'refreshOnResize' in opts ? (opts.refreshOnResize ?? true) : true;
 
   useOnResize(refreshOnResize ? containerRef : undefined, () => {
     overlayPositionCache.current = new WeakMap();

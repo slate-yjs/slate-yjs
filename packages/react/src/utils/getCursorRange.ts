@@ -11,7 +11,7 @@ const CHILDREN_TO_CURSOR_STATE_TO_RANGE: WeakMap<
 > = new WeakMap();
 
 export function getCursorRange<
-  TCursorData extends Record<string, unknown> = Record<string, unknown>
+  TCursorData extends Record<string, unknown> = Record<string, unknown>,
 >(
   editor: CursorEditor<TCursorData>,
   cursorState: CursorState<TCursorData>
