@@ -28,7 +28,6 @@ export function SimplePage() {
             setSynced(true);
           }
         },
-        connect: false,
       }),
     []
   );

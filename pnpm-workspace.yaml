@@ -15,6 +15,3 @@ allowBuilds:
   '@fortawesome/free-regular-svg-icons': false
   '@fortawesome/free-solid-svg-icons': false
   core-js-pure: false
-  # Native build for the example backend's SQLite store. Set to true locally
-  # to run examples/backend.
-  sqlite3: false

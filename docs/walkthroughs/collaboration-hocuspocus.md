@@ -13,7 +13,7 @@ import * as Y from 'yjs';
 const initialValue = [{ type: 'paragraph', children: [{ text: '' }] }];
 
 // Setup the server
-const server = Server.configure({
+const server = new Server({
   port: 1234,
 
   // Add logging
@@ -32,7 +32,6 @@ const server = Server.configure({
 });
 
 // Start the server
-server.enableMessageLogging();
 server.listen();
 ```
 
@@ -60,7 +59,6 @@ export function Editor() {
             setSynced(true);
           }
         },
-        connect: false,
       }),
     []
   );

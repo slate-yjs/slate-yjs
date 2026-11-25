@@ -86,7 +86,6 @@ export function RemoteCursorDecorations() {
             setSynced(true);
           }
         },
-        connect: false,
       }),
     []
   );
@@ -109,7 +108,8 @@ export function RemoteCursorDecorations() {
             withYHistory(
               withYjs(createEditor(), sharedType, { autoConnect: false })
             ),
-            provider.awareness,
+            // Awareness is only null when the provider is created with awareness: null.
+            provider.awareness!,
             {
               data: randomCursorData(),
             }
