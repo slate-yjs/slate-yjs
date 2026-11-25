@@ -1,5 +1,5 @@
 import type { Editor, Element, Node } from 'slate';
-import type Y from 'yjs';
+import type * as Y from 'yjs';
 
 export type DeltaAttributes = {
   retain: number;
@@ -16,6 +16,11 @@ export type InsertDelta = Array<DeltaInsert>;
 export type Delta = Array<
   DeltaRetain | DeltaDelete | DeltaInsert | DeltaAttributes
 >;
+
+export interface RecursiveDeltaInsert extends Omit<DeltaInsert, 'insert'> {
+  insert: string | RecursiveInsertDelta | RecursiveDeltaInsert;
+}
+export type RecursiveInsertDelta = Array<RecursiveDeltaInsert>;
 
 export type TextRange = { start: number; end: number };
 

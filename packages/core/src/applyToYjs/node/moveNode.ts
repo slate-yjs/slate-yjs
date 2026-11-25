@@ -1,7 +1,14 @@
-import { Descendant, MoveNodeOperation, Node, Path, Text } from 'slate';
+import {
+  Ancestor,
+  Descendant,
+  MoveNodeOperation,
+  Node,
+  Path,
+  Text,
+} from 'slate';
 import * as Y from 'yjs';
 import { Delta } from '../../model/types';
-import { cloneInsertDeltaDeep } from '../../utils/clone';
+import { cloneDeltaDeep } from '../../utils/clone';
 import { getInsertDeltaLength, yTextToInsertDelta } from '../../utils/delta';
 import { getYTarget } from '../../utils/location';
 import {
@@ -12,7 +19,7 @@ import { PRESERVE_CONTENT } from '../../utils/yjs';
 
 // Returns a copy of root without the node at path. Only the ancestors of the
 // removed node are copied.
-function withoutNode(root: Node, path: Path): Node {
+function withoutNode(root: Ancestor, path: Path): Ancestor {
   if (Text.isText(root)) {
     throw new Error('Cannot descend into slate text');
   }
@@ -22,19 +29,22 @@ function withoutNode(root: Node, path: Path): Node {
   if (rest.length === 0) {
     children.splice(index, 1);
   } else {
-    children[index] = withoutNode(children[index], rest) as Descendant;
+    children[index] = withoutNode(
+      children[index] as Ancestor,
+      rest
+    ) as Descendant;
   }
 
-  return { ...root, children } as Node;
+  return { ...root, children } as Ancestor;
 }
 
 export function moveNode(
   sharedRoot: Y.XmlText,
-  slateRoot: Node,
+  slateRoot: Ancestor,
   op: MoveNodeOperation
 ): void {
   const origin = getYTarget(sharedRoot, slateRoot, op.path);
-  const insertDelta = cloneInsertDeltaDeep(origin.targetDelta);
+  const insertDelta = cloneDeltaDeep(origin.targetDelta);
 
   const storedPositions = getStoredPositionsInDeltaAbsolute(
     sharedRoot,

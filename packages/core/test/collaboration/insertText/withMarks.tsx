@@ -1,6 +1,8 @@
 /** @jsx jsx */
 import { Editor } from 'slate';
-import { jsx } from '../../../../../support/jsx';
+import { jsx } from '../../support/jsx';
+
+export const skipVoidsMode = true;
 
 export const input = (
   <editor>
@@ -21,5 +23,5 @@ export const expected = (
 
 export function run(editor: Editor) {
   editor.addMark('bold', true);
-  editor.insertText('world');
+  editor.insertText('world', { voids: true });
 }

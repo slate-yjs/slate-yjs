@@ -22,7 +22,6 @@ const BASE: Variant = {
   eagerFlush: true,
 };
 
-const MARKS_BUG = "Yjs can't store an empty text node's marks (#343, #415).";
 const STALE_FLUSH_BUG =
   'Local edits still queued when a remote update arrives are written against the wrong tree.';
 const UNDO_BUG =
@@ -33,13 +32,12 @@ const UNDO_BUG =
 const VARIANTS: (Variant & { knownBug?: string })[] = [
   BASE,
   { ...BASE, name: 'blocks, 3 clients', clients: 3 },
-  { ...BASE, name: 'marks', marks: true, knownBug: MARKS_BUG },
+  { ...BASE, name: 'marks', marks: true },
   {
     ...BASE,
     name: 'edge mark values',
     marks: true,
     edgeMarkValues: true,
-    knownBug: MARKS_BUG,
   },
   { ...BASE, name: 'inlines', inlines: true },
   { ...BASE, name: 'nested blocks', nested: true },

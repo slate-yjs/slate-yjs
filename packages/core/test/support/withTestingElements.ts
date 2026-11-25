@@ -1,13 +1,23 @@
 import { Editor, Element, Transforms } from 'slate';
 import * as Y from 'yjs';
-import { wait } from '../../../support/utils';
-import { slateNodesToInsertDelta, withYjs } from '../src';
+import { wait, yTextFactory } from './utils';
+import { withYHistory, withYjs } from '../../src';
 
 const INLINE_ELEMENTS = ['note-link', 'link'];
 
+export interface WithTestingElementsOptions {
+  doc?: Y.Doc;
+  sharedType?: Y.XmlText;
+  voids?: boolean;
+}
+
 export async function withTestingElements(
   editor: Editor,
-  doc: Y.Doc = new Y.Doc()
+  {
+    doc,
+    sharedType = yTextFactory(editor, doc),
+    voids = false,
+  }: WithTestingElementsOptions = {}
 ) {
   const { normalizeNode, isInline } = editor;
 
@@ -32,12 +42,12 @@ export async function withTestingElements(
   editor.isInline = (element) =>
     INLINE_ELEMENTS.includes(element.type as string) || isInline(element);
 
-  const sharedType = doc.get('sharedRoot', Y.XmlText) as Y.XmlText;
-  if (sharedType.toDelta().length === 0) {
-    sharedType.applyDelta(slateNodesToInsertDelta(editor.children));
+  if (voids) {
+    editor.isVoid = () => true;
+    editor.markableVoid = () => true;
   }
 
-  const e = withYjs(editor, sharedType, { autoConnect: true });
+  const e = withYHistory(withYjs(editor, sharedType, { autoConnect: true }));
 
   // Wait for editor to be initialized
   await wait();

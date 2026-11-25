@@ -227,9 +227,7 @@ describe('known bugs', () => {
     expect(yjsChildren(editor)).toEqual(editor.children);
   });
 
-  // Yjs can't hold an empty string, so an empty text node's marks are lost.
-  // Other clients, and this one after a reload, see a plain empty text.
-  it.skip('keeps marks on an empty text node', () => {
+  it('keeps marks on an empty text node', () => {
     const doc = seededDoc([
       { type: 'paragraph', children: [{ text: 'bravo', bold: true }] },
     ]);

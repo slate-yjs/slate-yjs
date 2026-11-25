@@ -77,10 +77,19 @@
   },
   "overrides": [
     {
-      // slate-hyperscript fixtures pass marks such as `bold` as JSX props.
+      // slate-hyperscript fixtures pass marks such as `bold` as JSX props,
+      // and use element names such as `link` that are void in HTML.
       "files": ["**/test/**/*.tsx"],
       "rules": {
-        "react/no-unknown-property": "off"
+        "react/no-unknown-property": "off",
+        "react/void-dom-elements-no-children": "off"
+      }
+    },
+    {
+      // Tests import vitest, which is a root dev dependency.
+      "files": ["**/test/**"],
+      "rules": {
+        "import/no-extraneous-dependencies": "off"
       }
     }
   ],

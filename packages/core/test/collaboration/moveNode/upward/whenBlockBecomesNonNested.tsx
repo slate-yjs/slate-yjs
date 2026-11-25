@@ -1,6 +1,6 @@
 /** @jsx jsx */
 import { Editor, Transforms } from 'slate';
-import { jsx } from '../../../../../../support/jsx';
+import { jsx } from '../../../support/jsx';
 
 export const input = (
   <editor>
@@ -31,11 +31,13 @@ export function run(editor: Editor) {
       { type: 'unstyled' },
       {
         at: [1, 0],
+        voids: true,
       }
     );
     Transforms.moveNodes(editor, {
       at: [1, 0],
       to: [0],
+      voids: true,
     });
   });
 }

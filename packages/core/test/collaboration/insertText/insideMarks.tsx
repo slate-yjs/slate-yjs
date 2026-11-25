@@ -1,6 +1,6 @@
 /** @jsx jsx */
 import { Editor } from 'slate';
-import { jsx } from '../../../../../support/jsx';
+import { jsx } from '../../support/jsx';
 
 export const input = (
   <editor>
@@ -24,5 +24,5 @@ export const expected = (
 );
 
 export function run(editor: Editor) {
-  editor.insertText('world');
+  editor.insertText('world', { voids: true });
 }

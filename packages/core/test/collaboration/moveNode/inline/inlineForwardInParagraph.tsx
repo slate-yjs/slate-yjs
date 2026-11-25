@@ -28,3 +28,6 @@ export const expected = (
 export function run(editor: Editor) {
   Transforms.moveNodes(editor, { at: [0, 1], to: [0, 3] });
 }
+
+// Every element is void in voids mode, so moveNodes skips the paragraph.
+export const skipVoidsMode = true;

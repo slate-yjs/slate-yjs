@@ -1,6 +1,6 @@
 /** @jsx jsx */
 import { Editor, Transforms } from 'slate';
-import { jsx } from '../../../../../support/jsx';
+import { jsx } from '../../support/jsx';
 
 export const input = (
   <editor>
@@ -21,6 +21,12 @@ export const expected = (
 );
 
 export function run(editor: Editor) {
-  editor.insertNode({ type: 'unstyled', children: [{ text: '' }] });
-  Transforms.setNodes(editor, { type: 'header-one' });
+  editor.insertNode(
+    {
+      type: 'unstyled',
+      children: [{ text: '' }],
+    },
+    { voids: true }
+  );
+  Transforms.setNodes(editor, { type: 'header-one' }, { voids: true });
 }

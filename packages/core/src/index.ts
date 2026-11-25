@@ -20,6 +20,7 @@ import {
   slatePointToRelativePosition,
   slateRangeToRelativeRange,
 } from './utils/position';
+import { inspectYText } from './utils/yjs';
 
 export {
   withYjs,
@@ -44,4 +45,5 @@ export {
   relativeRangeToSlateRange,
   slatePointToRelativePosition,
   relativePositionToSlatePoint,
+  inspectYText,
 };

@@ -1,6 +1,36 @@
 import * as Y from 'yjs';
-import { DeltaInsert, InsertDelta } from '../model/types';
-import { deepEquals } from './object';
+import { Text } from 'slate';
+import { Delta, DeltaDelete, DeltaInsert, InsertDelta } from '../model/types';
+
+/**
+ * Reorder mixed runs of insertions and deletions to put the deletions first.
+ */
+export function sortDelta(delta: Delta) {
+  const sortedDelta: Delta = [];
+  let deletions: DeltaDelete[] = [];
+  let insertions: DeltaInsert[] = [];
+
+  function flush() {
+    sortedDelta.push(...deletions);
+    sortedDelta.push(...insertions);
+    deletions = [];
+    insertions = [];
+  }
+
+  for (const change of delta) {
+    if ('insert' in change) {
+      insertions.push(change);
+    } else if ('delete' in change) {
+      deletions.push(change);
+    } else {
+      flush();
+      sortedDelta.push(change);
+    }
+  }
+
+  flush();
+  return sortedDelta;
+}
 
 export function normalizeInsertDelta(delta: InsertDelta): InsertDelta {
   const normalized: InsertDelta = [];
@@ -23,7 +53,11 @@ export function normalizeInsertDelta(delta: InsertDelta): InsertDelta {
     const merge =
       prev.attributes === element.attributes ||
       (!prev.attributes === !element.attributes &&
-        deepEquals(prev.attributes ?? {}, element.attributes ?? {}));
+        Text.equals(
+          { ...prev.attributes, text: '' },
+          { ...element.attributes, text: '' },
+          { loose: true }
+        ));
 
     if (merge) {
       prev.insert += element.insert;
@@ -46,6 +80,37 @@ export function getInsertLength({ insert }: DeltaInsert): number {
 
 export function getInsertDeltaLength(delta: InsertDelta): number {
   return delta.reduce((curr, element) => curr + getInsertLength(element), 0);
+}
+
+export function getNextDeltaInsert(
+  delta: InsertDelta,
+  start: number
+): DeltaInsert | null {
+  let currentOffset = 0;
+
+  for (let i = 0; i < delta.length; i++) {
+    const element = delta[i];
+    const elementLength = getInsertLength(element);
+    const { insert } = element;
+
+    if (currentOffset + elementLength <= start) {
+      currentOffset += elementLength;
+      continue;
+    }
+
+    if (typeof insert !== 'string') {
+      return element;
+    }
+
+    const startOffset = Math.max(0, start - currentOffset);
+
+    return {
+      ...element,
+      insert: insert.slice(startOffset),
+    };
+  }
+
+  return null;
 }
 
 export function sliceInsertDelta(
