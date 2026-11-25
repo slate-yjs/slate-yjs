@@ -169,7 +169,7 @@ function getAbsolutePositionsInTextRange(
 
       return position.assoc >= 0
         ? position.index >= textRange.start && position.index < textRange.end
-        : position.index > textRange.start && position.index >= textRange.end;
+        : position.index > textRange.start && position.index <= textRange.end;
     })
   );
 }

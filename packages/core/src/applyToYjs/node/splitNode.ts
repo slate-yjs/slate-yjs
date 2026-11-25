@@ -58,10 +58,16 @@ export function splitNode(
     0
   );
 
+  // Copy the shorter side into a new Yjs type and keep the longer side in
+  // place, so fewer remote cursors and concurrent edits are moved.
+  const copyHead = ySplitOffset < length - ySplitOffset;
+  const copyStart = copyHead ? 0 : ySplitOffset;
+  const copyLength = copyHead ? ySplitOffset : length - ySplitOffset;
+
   const splitDelta = sliceInsertDelta(
     yTextToInsertDelta(target.yTarget),
-    ySplitOffset,
-    length - ySplitOffset
+    copyStart,
+    copyLength
   );
   const clonedDelta = cloneInsertDeltaDeep(splitDelta);
 
@@ -69,22 +75,44 @@ export function splitNode(
     sharedRoot,
     target.yTarget,
     splitDelta,
-    ySplitOffset
+    copyStart
   );
 
   const toInsert = new Y.XmlText();
   toInsert.applyDelta(clonedDelta, PRESERVE_CONTENT);
 
-  Object.entries(op.properties).forEach(([key, value]) => {
-    toInsert.setAttribute(key, value);
-  });
+  if (copyHead) {
+    // The copy becomes the first node and keeps the current properties. The
+    // original becomes the second node and gets op.properties.
+    const { yTarget } = target;
+    const attributes = yTarget.getAttributes();
+    Object.entries(attributes).forEach(([key, value]) => {
+      toInsert.setAttribute(key, value);
+    });
+    Object.keys(attributes).forEach((key) => {
+      if (!(key in op.properties)) {
+        yTarget.removeAttribute(key);
+      }
+    });
+    Object.entries(op.properties).forEach(([key, value]) => {
+      if (attributes[key] !== value) {
+        yTarget.setAttribute(key, value);
+      }
+    });
 
-  target.yTarget.delete(
-    splitTarget.textRange.start,
-    target.yTarget.length - splitTarget.textRange.start
-  );
+    yTarget.delete(0, splitTarget.textRange.start);
+    target.yParent.insertEmbed(target.textRange.start, toInsert);
+  } else {
+    Object.entries(op.properties).forEach(([key, value]) => {
+      toInsert.setAttribute(key, value);
+    });
 
-  target.yParent.insertEmbed(target.textRange.end, toInsert);
+    target.yTarget.delete(
+      splitTarget.textRange.start,
+      target.yTarget.length - splitTarget.textRange.start
+    );
+    target.yParent.insertEmbed(target.textRange.end, toInsert);
+  }
 
   restoreStoredPositionsWithDeltaAbsolute(
     sharedRoot,
@@ -92,6 +120,6 @@ export function splitNode(
     storedPositions,
     clonedDelta,
     0,
-    ySplitOffset
+    copyStart
   );
 }
