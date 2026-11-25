@@ -16,7 +16,7 @@
     "@hocuspocus/provider": "^1.0.0-alpha.36",
     "@slate-yjs/core": "workspace:^",
     "@slate-yjs/react": "workspace:^",
-    "clsx": "^1.1.1",
+    "clsx": "^2.1.1",
     "randomcolor": "^0.6.2",
     "react": "^19.3.1",
     "react-dom": "^19.3.1",
