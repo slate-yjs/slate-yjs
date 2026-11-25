@@ -106,8 +106,8 @@ importers:
         specifier: ^3.5.0
         version: 3.5.0(@fortawesome/fontawesome-svg-core@7.3.1)(react@19.3.1)
       '@hocuspocus/provider':
-        specifier: ^1.0.0-alpha.36
-        version: 1.0.0-alpha.36
+        specifier: ^4.9.0
+        version: 4.9.0(y-protocols@1.0.7(yjs@13.6.33))(yjs@13.6.33)
       '@slate-yjs/core':
         specifier: workspace:^
         version: link:../../packages/core
@@ -654,6 +654,9 @@ packages:
   '@hocuspocus/common@1.0.0-alpha.11':
     resolution: {integrity: sha512-oOddSLUTr8KrC58KSs5YHzr99ZSI4HZdIkYRoqmrusViF8M850uLXgYce7eG7Xaq4KlvXCSDG+wioQRTFXkCaA==}
 
+  '@hocuspocus/common@4.9.0':
+    resolution: {integrity: sha512-lrp5gtT8kvLt9/MuRRQPKaveihv5emSsP9+sMCq2rx8xVGn33PZIv0haSGyb37CbAIlVaHb/yG22VKKMx+clYg==}
+
   '@hocuspocus/extension-database@1.0.0-alpha.16':
     resolution: {integrity: sha512-Lhlu106GnvQ78dZ45P+5340mjtLJVz2/WfV/wHec/8sLM1vrM2w+h0eGz3lAk5Khy4JDVof2QGsB94zijQRwXw==}
 
@@ -663,8 +666,11 @@ packages:
   '@hocuspocus/extension-sqlite@1.0.0-alpha.16':
     resolution: {integrity: sha512-kOxCcGbR5sqCURL+y3+MdDHKdPfWiCkltp9IwpLbuW9KrodK47cHwhBqtdHB9TmHn/Fx4IWgWwEsbK/tRi7cvQ==}
 
-  '@hocuspocus/provider@1.0.0-alpha.36':
-    resolution: {integrity: sha512-vmrbaS2Si408Gau1vv/xH7ln/QbVJtUZsgLz0DwYYWWGcAJffaU1f89B2+sOL8IGRLclybldrVfZR+tFKBMzRw==}
+  '@hocuspocus/provider@4.9.0':
+    resolution: {integrity: sha512-I+B/bJs8SRCBZRRevdNkMGtCAE6S13hsTFX2SZ33iSSJC/4IZcsl5+St9/OYYxxkETfvelJKsmhtwdyIwXnsEg==}
+    peerDependencies:
+      y-protocols: ^1.0.6
+      yjs: ^13.6.8
 
   '@hocuspocus/server@1.0.0-alpha.102':
     resolution: {integrity: sha512-U82HAy9S9gNuPShsUrefJH2Bdv71+6gjIueNW39oLiWjR87Nmuenjzu1gbVcC6sJwjlsj3JJ0E1NDPu0xTDfxQ==}
@@ -708,8 +714,8 @@ packages:
   '@juggle/resize-observer@3.4.0':
     resolution: {integrity: sha512-dfLbk+PwWvFzSxwk3n5ySL0hfBog779o8h68wK/7/APo/7cgyWp5jcXockbxdk5kFRkbeXWm4Fbi9FrdN381sA==}
 
-  '@lifeomic/attempt@3.0.2':
-    resolution: {integrity: sha512-JHRfM7fUit2UroC0xRnuzMGegSTbfvz6X/1PgcIvahXC+A7UsKa8XfR1YrBsvoSu669iMTeNkDb26pSkGOzXKw==}
+  '@lifeomic/attempt@3.1.0':
+    resolution: {integrity: sha512-QZqem4QuAnAyzfz+Gj5/+SLxqwCAw2qmt7732ZXodr6VDWGeYLG6w1i/vYLa55JQM9wRuBKLmXmiZ2P0LtE5rw==}
 
   '@manypkg/find-root@3.1.0':
     resolution: {integrity: sha512-BcSqCyKhBVZ5YkSzOiheMCV41kqAFptW6xGqYSTjkVTl9XQpr+pqHhwgGCOHQtjDCv7Is6EFyA14Sm5GVbVABA==}
@@ -3666,6 +3672,10 @@ snapshots:
     dependencies:
       lib0: 0.2.120
 
+  '@hocuspocus/common@4.9.0':
+    dependencies:
+      lib0: 0.2.120
+
   '@hocuspocus/extension-database@1.0.0-alpha.16':
     dependencies:
       '@hocuspocus/server': 1.0.0-alpha.102
@@ -3693,11 +3703,11 @@ snapshots:
       - supports-color
       - utf-8-validate
 
-  '@hocuspocus/provider@1.0.0-alpha.36':
+  '@hocuspocus/provider@4.9.0(y-protocols@1.0.7(yjs@13.6.33))(yjs@13.6.33)':
     dependencies:
-      '@hocuspocus/common': 1.0.0-alpha.11
-      '@lifeomic/attempt': 3.0.2
-      lib0: 0.2.47
+      '@hocuspocus/common': 4.9.0
+      '@lifeomic/attempt': 3.1.0
+      lib0: 0.2.120
       y-protocols: 1.0.7(yjs@13.6.33)
       yjs: 13.6.33
 
@@ -3755,7 +3765,7 @@ snapshots:
 
   '@juggle/resize-observer@3.4.0': {}
 
-  '@lifeomic/attempt@3.0.2': {}
+  '@lifeomic/attempt@3.1.0': {}
 
   '@manypkg/find-root@3.1.0':
     dependencies:
