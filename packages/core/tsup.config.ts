@@ -12,6 +12,7 @@ export default defineConfig(
         platform: 'browser',
         splitting: false,
         bundle: true,
+        target: 'es2017',
         sourcemap: true,
         minify: false,
         clean: !watch,
