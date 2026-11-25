@@ -1,3 +1,4 @@
+/* eslint-disable import/no-extraneous-dependencies */
 import { createEditor, Descendant, Transforms } from 'slate';
 import { describe, expect, it } from 'vitest';
 import * as Y from 'yjs';
