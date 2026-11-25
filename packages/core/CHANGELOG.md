@@ -1,5 +1,11 @@
 # @slate-yjs/core
 
+## 1.0.7
+
+### Patch Changes
+
+- [#466](https://github.com/slate-yjs/slate-yjs/pull/466) [`cf2de60`](https://github.com/slate-yjs/slate-yjs/commit/cf2de604dc39de90c5fbc89a5a55783737a0e8fe) Thanks [@juliankrispel](https://github.com/juliankrispel)! - Copy the shorter side when splitting a node. A split copied everything after the split point into a new Yjs node, so pressing Enter at the start of a block moved all of it, and remote cursors and concurrent typing in it jumped to the split point. Stored positions at the end of a text are also kept on the right side of a split. Fixes [#299](https://github.com/slate-yjs/slate-yjs/issues/299) for splits near the start or end of a block.
+
 ## 1.0.6
 
 ### Patch Changes
