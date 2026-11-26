@@ -52,6 +52,9 @@ export type Variant = {
   // Adds withYHistory, undo and redo actions, and a final check that undoing
   // every client's changes restores the initial document.
   history?: boolean;
+  // Starts with empty texts: an empty paragraph and an inline at both edges
+  // of its block.
+  emptyTexts?: boolean;
 };
 
 export type FuzzFailure = {
@@ -162,6 +165,18 @@ function initialValue(variant: Variant): Descendant[] {
         { text: 'go ' },
         { type: 'link', url: 'x', children: [{ text: 'here' }] },
         { text: ' now' },
+      ],
+    } as Descendant);
+  }
+
+  if (variant.emptyTexts) {
+    value.push(p(''));
+    value.push({
+      type: 'paragraph',
+      children: [
+        { text: '' },
+        { type: 'link', url: 'y', children: [{ text: 'edge' }] },
+        { text: '' },
       ],
     } as Descendant);
   }
@@ -461,13 +476,17 @@ export function runFuzz(
 ) {
   const clients: Client[] = [];
 
+  // Fixed client IDs make concurrent inserts order the same way on every run,
+  // so a failing case replays.
   const seedDoc = new Y.Doc();
+  seedDoc.clientID = 1;
   const seedRoot = seedDoc.get('content', Y.XmlText) as Y.XmlText;
   seedRoot.applyDelta(slateNodesToInsertDelta(initialValue(variant)));
   const seedState = Y.encodeStateAsUpdate(seedDoc);
 
   for (let id = 0; id < variant.clients; id += 1) {
     const doc = new Y.Doc();
+    doc.clientID = 100 + id;
     Y.applyUpdate(doc, seedState, REMOTE);
     const sharedRoot = doc.get('content', Y.XmlText) as Y.XmlText;
     const bound = withYjs(applySchema(createEditor(), variant), sharedRoot);
