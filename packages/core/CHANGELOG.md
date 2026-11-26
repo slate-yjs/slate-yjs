@@ -1,5 +1,11 @@
 # @slate-yjs/core
 
+## 1.1.1
+
+### Patch Changes
+
+- [#490](https://github.com/slate-yjs/slate-yjs/pull/490) [`453140b`](https://github.com/slate-yjs/slate-yjs/commit/453140b1208639876dc6c86c09f2a9f12bbb79ff) Thanks [@juliankrispel](https://github.com/juliankrispel)! - Fix the formatting of remote text inserted next to text that the same remote change both reformatted and inserted into. The text could take the formatting of its neighbour, after which the editor no longer matched Yjs and later edits could throw.
+
 ## 1.1.0
 
 ### Minor Changes
