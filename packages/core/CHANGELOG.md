@@ -1,5 +1,13 @@
 # @slate-yjs/core
 
+## 1.0.9
+
+### Patch Changes
+
+- [#484](https://github.com/slate-yjs/slate-yjs/pull/484) [`8b86c1b`](https://github.com/slate-yjs/slate-yjs/commit/8b86c1b197cfb34a71b561557069ae6a5c4380de) Thanks [@juliankrispel](https://github.com/juliankrispel)! - Stop reversing a remote Yjs event's delta in place. Yjs gives the same delta to every observer, so a second editor bound to the same shared root, or any other observer that ran afterwards, got the changes in reverse order. `withYHistory` no longer maps the selection while the editor is disconnected, which threw "Path doesn't match yText" when Slate set a selection, for example on autofocus, before the first sync.
+
+- [#487](https://github.com/slate-yjs/slate-yjs/pull/487) [`8e9ed3e`](https://github.com/slate-yjs/slate-yjs/commit/8e9ed3e830ef6adbaa4ccd1c11da413268795a78) Thanks [@juliankrispel](https://github.com/juliankrispel)! - Apply remote text inserts with the right marks when the same update also changes the formatting of the text right after the insert. The insert was added to the neighbouring text node and took on its new formatting, so for example typed text became italic on other clients when the text after it was made italic in the same update.
+
 ## 1.0.8
 
 ### Patch Changes
