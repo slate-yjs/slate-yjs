@@ -1,3 +1,5 @@
+import { translateYjsEvent } from './applyToSlate';
+import { applySlateOp } from './applyToYjs';
 import { RelativeRange } from './model/types';
 import {
   CursorEditor,
@@ -44,4 +46,7 @@ export {
   relativeRangeToSlateRange,
   slatePointToRelativePosition,
   relativePositionToSlatePoint,
+  // Low-level translation
+  translateYjsEvent,
+  applySlateOp,
 };
