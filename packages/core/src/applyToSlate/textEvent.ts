@@ -26,7 +26,7 @@ function applyDelta(node: Element, slatePath: Path, delta: Delta): Operation[] {
   }, 0);
 
   // Apply changes in reverse order to avoid path changes.
-  delta.reverse().forEach((change) => {
+  [...delta].reverse().forEach((change) => {
     if ('attributes' in change && 'retain' in change) {
       const [startPathOffset, startTextOffset] = yOffsetToSlateOffsets(
         node,

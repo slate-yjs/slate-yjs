@@ -77,6 +77,12 @@ export function withYHistory<T extends YjsEditor>(
   e.onChange = () => {
     onChange();
 
+    // Before connect the shared root may not match the Slate tree yet.
+    if (!YjsEditor.connected(e)) {
+      LAST_SELECTION.delete(e);
+      return;
+    }
+
     LAST_SELECTION.set(
       e,
       e.selection && slateRangeToRelativeRange(e.sharedRoot, e, e.selection)
