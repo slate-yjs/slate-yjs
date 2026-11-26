@@ -63,4 +63,21 @@ describe('remote formatting', () => {
       },
     ]);
   });
+
+  it('keeps an insert unformatted before formatted inserts into reformatted text', () => {
+    const { editor, applyRemote } = setup('x');
+
+    applyRemote((paragraph) => {
+      paragraph.format(0, 1, { italic: true });
+      paragraph.insert(0, 'h', { italic: true });
+      paragraph.insert(0, 'c');
+    });
+
+    expect(editor.children).toEqual([
+      {
+        type: 'paragraph',
+        children: [{ text: 'c' }, { text: 'hx', italic: true }],
+      },
+    ]);
+  });
 });

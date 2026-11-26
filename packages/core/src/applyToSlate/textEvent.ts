@@ -1,4 +1,12 @@
-import { Editor, Element, Node, Operation, Path, Text } from 'slate';
+import {
+  Editor,
+  Element,
+  InsertTextOperation,
+  Node,
+  Operation,
+  Path,
+  Text,
+} from 'slate';
 import * as Y from 'yjs';
 import { Delta } from '../model/types';
 import { deltaInsertToSlateNode } from '../utils/convert';
@@ -166,16 +174,31 @@ function applyDelta(node: Element, slatePath: Path, delta: Delta): Operation[] {
          * Since we're not actually using slate to update the node
          * this is a simulation
          */
+        // Inserting text doesn't change a node's properties, so look past
+        // inserts into this node for the operation that last set them.
+        let propsOpIndex = ops.length - 1;
+        while (
+          propsOpIndex >= 0 &&
+          ops[propsOpIndex].type === 'insert_text' &&
+          Path.equals(
+            (ops[propsOpIndex] as InsertTextOperation).path,
+            childPath
+          )
+        ) {
+          propsOpIndex -= 1;
+        }
+        const propsOp = ops[propsOpIndex];
+
         let currentProps = getProperties(child);
-        if (lastOp?.type === 'insert_node') {
-          currentProps = lastOp.node;
+        if (propsOp?.type === 'insert_node') {
+          currentProps = propsOp.node;
         } else if (
-          lastOp?.type === 'set_node' &&
-          Path.equals(lastOp.path, childPath)
+          propsOp?.type === 'set_node' &&
+          Path.equals(propsOp.path, childPath)
         ) {
           currentProps = omitNullEntries({
             ...currentProps,
-            ...lastOp.newProperties,
+            ...propsOp.newProperties,
           });
         }
 

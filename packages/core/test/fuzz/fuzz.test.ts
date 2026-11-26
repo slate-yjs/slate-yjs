@@ -61,7 +61,22 @@ const VARIANTS: (Variant & { knownBug?: string })[] = [
     eagerFlush: false,
     knownBug: STALE_FLUSH_BUG,
   },
+  {
+    ...BASE,
+    name: 'empty texts',
+    marks: true,
+    inlines: true,
+    emptyTexts: true,
+  },
   { ...BASE, name: 'history', history: true },
+  {
+    ...BASE,
+    name: 'history, empty texts',
+    marks: true,
+    inlines: true,
+    history: true,
+    emptyTexts: true,
+  },
   {
     ...BASE,
     name: 'history, 1 client',
