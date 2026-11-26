@@ -80,4 +80,22 @@ describe('remote formatting', () => {
       },
     ]);
   });
+
+  it('keeps an insert formatted before plain inserts into unformatted text', () => {
+    const { editor, applyRemote } = setup('x');
+    applyRemote((paragraph) => paragraph.format(0, 1, { italic: true }));
+
+    applyRemote((paragraph) => {
+      paragraph.format(0, 1, { italic: null });
+      paragraph.insert(0, 'h');
+      paragraph.insert(0, 'c', { italic: true });
+    });
+
+    expect(editor.children).toEqual([
+      {
+        type: 'paragraph',
+        children: [{ text: 'c', italic: true }, { text: 'hx' }],
+      },
+    ]);
+  });
 });

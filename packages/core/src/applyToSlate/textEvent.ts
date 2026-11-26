@@ -175,7 +175,10 @@ function applyDelta(node: Element, slatePath: Path, delta: Delta): Operation[] {
          * this is a simulation
          */
         // Inserting text doesn't change a node's properties, so look past
-        // inserts into this node for the operation that last set them.
+        // inserts into this node for the operation that last set them. An
+        // insert_text is only emitted directly after another operation on the
+        // same path, so this ends at the operation that set this node's
+        // properties.
         let propsOpIndex = ops.length - 1;
         while (
           propsOpIndex >= 0 &&
