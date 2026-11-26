@@ -1,5 +1,11 @@
 # @slate-yjs/core
 
+## 1.1.0
+
+### Minor Changes
+
+- [#488](https://github.com/slate-yjs/slate-yjs/pull/488) [`d5c46f4`](https://github.com/slate-yjs/slate-yjs/commit/d5c46f40ee256b93bdf3faa2039b87a983ebf206) Thanks [@juliankrispel](https://github.com/juliankrispel)! - Export `translateYjsEvent` and `applySlateOp`, the low-level functions `withYjs` uses to turn a Yjs event into Slate operations and a Slate operation into Yjs changes. Both assume Slate and Yjs held the same document before the change.
+
 ## 1.0.9
 
 ### Patch Changes
