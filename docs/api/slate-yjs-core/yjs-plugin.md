@@ -31,6 +31,12 @@ const editor = useMemo(
 );
 ```
 
+### Empty text nodes
+
+Text properties are stored as Yjs formatting on the characters they apply to, so an empty text node has nowhere to keep them. Its properties, such as marks, stay in the local editor but aren't synced: other clients, and this client after reloading, see the empty text without them. Once text is typed into it, the new text is synced with the properties the local editor gives it.
+
+This rarely matters, since an empty text usually means its text was deleted. If an empty line needs to keep a style, for example a font for the next text typed there, store it on the block element instead of the text.
+
 ## YjsEditor
 
 ### Static methods
