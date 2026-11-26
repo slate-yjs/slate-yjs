@@ -166,10 +166,18 @@ function applyDelta(node: Element, slatePath: Path, delta: Delta): Operation[] {
          * Since we're not actually using slate to update the node
          * this is a simulation
          */
-        const currentProps =
-          lastOp != null && lastOp.type === 'insert_node'
-            ? lastOp.node
-            : getProperties(child);
+        let currentProps = getProperties(child);
+        if (lastOp?.type === 'insert_node') {
+          currentProps = lastOp.node;
+        } else if (
+          lastOp?.type === 'set_node' &&
+          Path.equals(lastOp.path, childPath)
+        ) {
+          currentProps = omitNullEntries({
+            ...currentProps,
+            ...lastOp.newProperties,
+          });
+        }
 
         let lastPath: Path = [];
 

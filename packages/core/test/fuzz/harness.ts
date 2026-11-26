@@ -194,6 +194,24 @@ function sameJson(a: unknown, b: unknown) {
   return canonical(a) === canonical(b);
 }
 
+// Yjs has no place to store properties on an empty text, so they aren't
+// synced (#343). Drop them when comparing against Yjs or other clients.
+function withoutEmptyTextProperties(nodes: Descendant[]): Descendant[] {
+  return nodes.map((node) => {
+    if (Text.isText(node)) {
+      return node.text === '' ? { text: '' } : node;
+    }
+    return {
+      ...node,
+      children: withoutEmptyTextProperties(node.children),
+    } as Descendant;
+  });
+}
+
+function sameSyncedJson(a: Descendant[], b: Descendant[]) {
+  return sameJson(withoutEmptyTextProperties(a), withoutEmptyTextProperties(b));
+}
+
 function pick<T>(items: T[], n: number): T | undefined {
   if (items.length === 0) {
     return undefined;
@@ -503,7 +521,7 @@ export function runFuzz(
       variant,
       yTextToSlateElement(client.editor.sharedRoot).children
     );
-    if (!sameJson(client.editor.children, fromYjs)) {
+    if (!sameSyncedJson(client.editor.children, fromYjs)) {
       fail(
         'diverged-from-yjs',
         client,
@@ -647,7 +665,7 @@ export function runFuzz(
     const firstState = yTextToSlateElement(first.editor.sharedRoot).children;
     rest.forEach((client) => {
       const state = yTextToSlateElement(client.editor.sharedRoot).children;
-      if (!sameJson(state, firstState)) {
+      if (!sameSyncedJson(state, firstState)) {
         fail(
           'clients-diverged',
           client,
@@ -656,7 +674,7 @@ export function runFuzz(
           )}\nclient 0 ${JSON.stringify(firstState)}`
         );
       }
-      if (!sameJson(client.editor.children, first.editor.children)) {
+      if (!sameSyncedJson(client.editor.children, first.editor.children)) {
         fail(
           'clients-diverged',
           client,
